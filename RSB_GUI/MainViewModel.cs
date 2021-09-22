@@ -34,6 +34,25 @@ namespace RSB_GUI
                 this.OnPropertyChanged("OutputFile");
             }
         }
+        public double BlockPower
+        {
+            get
+            {
+                return _blockPower;
+            }
+            set
+            {
+                this._blockPower = value;
+                this.OnPropertyChanged();
+            }
+        }
+        public double BlockLength
+        {
+            get
+            {
+                return _blockPower * 64;
+            }
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainViewModel()
         {
@@ -64,6 +83,7 @@ namespace RSB_GUI
 
         private string _inputFile = string.Empty;
         private string _outputFile = string.Empty;
+        private double _blockPower = 1;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

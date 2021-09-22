@@ -5,11 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI"
         mc:Ignorable="d"
-        Title="Шифратор ShiftRow" Height="498" Width="1032">
+        Title="Шифратор ShiftRow" Height="498" Width="945">
     <Grid>
         <TextBox HorizontalAlignment="Left" Text="{Binding InputFile}"  Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
-        <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="597,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
+        <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="516,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
         <Button x:Name="SelectInputFileButton" Content="..." HorizontalAlignment="Left" Margin="376,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
-        <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="963,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
+        <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="882,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
+        <Label Content="Вхідний файл" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="366"/>
+        <Label Content="Вихідний файл" HorizontalAlignment="Left" Margin="516,47,0,0" VerticalAlignment="Top" Width="366"/>
+        <Slider HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Maximum="4" Orientation="Horizontal" Minimum="1" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>
+        <Label Content="Розмір блоку" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding BlockLength}" HorizontalAlignment="Left" Margin="130,131,0,0" VerticalAlignment="Top" Width="36"/>
     </Grid>
 </Window>
