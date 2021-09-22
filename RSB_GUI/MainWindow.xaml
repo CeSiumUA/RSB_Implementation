@@ -11,10 +11,13 @@
         <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="516,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
         <Button x:Name="SelectInputFileButton" Content="..." HorizontalAlignment="Left" Margin="376,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
         <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="882,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
-        <Label Content="Вхідний файл" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="366"/>
-        <Label Content="Вихідний файл" HorizontalAlignment="Left" Margin="516,47,0,0" VerticalAlignment="Top" Width="366"/>
+        <Label Content="Вхідний файл:" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="366"/>
+        <Label Content="Вихідний файл:" HorizontalAlignment="Left" Margin="516,47,0,0" VerticalAlignment="Top" Width="366"/>
         <Slider HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Maximum="4" Orientation="Horizontal" Minimum="1" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>
-        <Label Content="Розмір блоку" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Розмір блоку:" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="{Binding BlockLength}" HorizontalAlignment="Left" Margin="130,131,0,0" VerticalAlignment="Top" Width="36"/>
+        <Label Content="Число зсуву:" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="10,188,0,0" TextWrapping="Wrap" Text="{Binding ShiftValue}" VerticalAlignment="Top" Width="120"/>
+        <CheckBox Content="Використовувати спыльний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

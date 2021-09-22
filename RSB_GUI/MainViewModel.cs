@@ -19,7 +19,7 @@ namespace RSB_GUI
             set
             {
                 _inputFile = value;
-                this.OnPropertyChanged("InputFile");
+                this.OnPropertyChanged();
             }
         }
         public string OutputFile
@@ -31,7 +31,7 @@ namespace RSB_GUI
             set
             {
                 _outputFile = value;
-                this.OnPropertyChanged("OutputFile");
+                this.OnPropertyChanged();
             }
         }
         public double BlockPower
@@ -53,6 +53,31 @@ namespace RSB_GUI
                 return _blockPower * 64;
             }
         }
+        public double ShiftValue
+        {
+            get
+            {
+                return _shiftValue;
+            }
+            set
+            {
+                _shiftValue = value;
+                this.OnPropertyChanged();
+            }
+        }
+        public bool UseCommonKey
+        {
+            get
+            {
+                return _useCommonKey;
+            }
+            set
+            {
+                _useCommonKey = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainViewModel()
         {
@@ -84,6 +109,8 @@ namespace RSB_GUI
         private string _inputFile = string.Empty;
         private string _outputFile = string.Empty;
         private double _blockPower = 1;
+        private double _shiftValue = 0;
+        private bool _useCommonKey = false;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
