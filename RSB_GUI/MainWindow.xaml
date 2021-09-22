@@ -1,0 +1,15 @@
+﻿<Window x:Class="RSB_GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RSB_GUI"
+        mc:Ignorable="d"
+        Title="Шифратор ShiftRow" Height="498" Width="1032">
+    <Grid>
+        <TextBox HorizontalAlignment="Left" Text="{Binding InputFile}"  Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
+        <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="597,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
+        <Button x:Name="SelectInputFileButton" Content="..." HorizontalAlignment="Left" Margin="376,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
+        <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="963,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
+    </Grid>
+</Window>

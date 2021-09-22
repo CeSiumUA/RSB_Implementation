@@ -10,6 +10,8 @@ const int keyLength = 64;
 
 int encryptionRounds = encryptionSteps * (int)Math.Pow(2, blockLength / 64);
 
+var blockPower = Math.Log2(blockLength / 64);
+
 var commonKey = GenerateCommonKey(keyLength);
 
 var rawTextBytes = Encoding.UTF8.GetBytes(rawText).ToList();
@@ -25,6 +27,12 @@ rawTextBytes.AddRange(Enumerable.Repeat<byte>(0, remnantBytesCount));
 for(int iteration = 0; iteration < encryptionSteps; iteration++)
 {
     var splittedKey = commonKey.Skip(iteration * roundKeyLength / 8).Take(roundKeyLength / 8).ToArray();
+
+    var keyBytesToTake = (byte)(8 - 3 - blockPower);
+
+    var sfiftingByte = splittedKey[0] ^ splittedKey[0] >> keyBytesToTake << keyBytesToTake | (byte)1;
+
+
 }
 
 Console.ReadLine();
