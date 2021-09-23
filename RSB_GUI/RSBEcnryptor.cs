@@ -25,7 +25,7 @@ namespace RSB_GUI
             var bytesBlockCount = blockSize / 8;
             var encryptionSteps = bytes.Length / bytesBlockCount;
             TotalSteps = encryptionSteps;
-            List<byte> encryptedBytes = new List<byte>(bytes.Length);
+            byte[] encryptedBytes = new byte[bytes.Length];
             for(int x = 0; x < encryptionSteps; x++)
             {
                 if (cancellation.IsCancellationRequested) break;
@@ -48,7 +48,7 @@ namespace RSB_GUI
 
                 bitArray.CopyTo(blockBytes, 0);
 
-                encryptedBytes.AddRange(blockBytes);
+                Array.Copy(blockBytes, 0, encryptedBytes, x * bytesBlockCount, blockBytes.Length);
 
                 Step = x;
             }

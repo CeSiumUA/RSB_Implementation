@@ -80,6 +80,27 @@ namespace RSB_GUI
             }
         }
 
+        public bool AllowEncryption
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.InputFile) && !string.IsNullOrEmpty(this.OutputFile) && this.ShiftValue != 0;
+            }
+        }
+
+        public bool IsEncryptionRunning
+        {
+            get
+            {
+                return _isEncryptionRunning;
+            }
+            set
+            {
+                this._isEncryptionRunning = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainViewModel()
         {
@@ -88,12 +109,18 @@ namespace RSB_GUI
 
         public async Task StartEncryption()
         {
+            this.IsEncryptionRunning = true;
             this._cancellationTokenSource = new CancellationTokenSource();
             RSBEcnryptor encryptor = new RSBEcnryptor(this.BlockLength, this.ShiftValue);
             var fileBytes = File.ReadAllBytes(this.InputFile);
             var encryptedBytes = await encryptor.EncryptBytes(fileBytes, _cancellationTokenSource.Token);
-            if (_cancellationTokenSource.IsCancellationRequested) return;
+            if (_cancellationTokenSource.IsCancellationRequested)
+            {
+                this.IsEncryptionRunning = false;
+                return;
+            }
             File.WriteAllBytes(this.OutputFile, encryptedBytes);
+            this.IsEncryptionRunning = false;
         }
 
         public void CancelEncryption()
@@ -129,6 +156,7 @@ namespace RSB_GUI
         private int _blockPower = 0;
         private int _shiftValue = 0;
         private bool _useCommonKey = false;
+        private bool _isEncryptionRunning = false;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
