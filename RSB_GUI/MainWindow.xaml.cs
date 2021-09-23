@@ -24,6 +24,7 @@ namespace RSB_GUI
     public partial class MainWindow : Window
     {
         private MainViewModel mainViewModel;
+        private const string settingsFileName = "settings";
         public MainWindow()
         {
             InitializeComponent();
@@ -52,7 +53,7 @@ namespace RSB_GUI
         {
             var settings = mainViewModel.Settings;
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream("settings.bin", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(settingsFileName, FileMode.OpenOrCreate))
             {
                 binaryFormatter.Serialize(fs, settings);
             }
@@ -61,10 +62,10 @@ namespace RSB_GUI
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
             Settings settings = null;
-            if (File.Exists("settings.bin"))
+            if (File.Exists(settingsFileName))
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
-                using (FileStream fs = new FileStream("settings.bin", FileMode.Open))
+                using (FileStream fs = new FileStream(settingsFileName, FileMode.Open))
                 {
                     if (fs.Length > 0)
                     {
