@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -51,17 +51,26 @@ namespace RSB_GUI
         protected override void OnClosing(CancelEventArgs e)
         {
             var settings = mainViewModel.Settings;
-            var json = JsonConvert.SerializeObject(settings);
-            File.WriteAllText("settings.json", json);
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream("settings.bin", FileMode.OpenOrCreate))
+            {
+                binaryFormatter.Serialize(fs, settings);
+            }
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
             Settings settings = null;
-            if (File.Exists("settings.json"))
+            if (File.Exists("settings.bin"))
             {
-                var json = File.ReadAllText("settings.json");
-                settings = JsonConvert.DeserializeObject<Settings>(json);
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                using (FileStream fs = new FileStream("settings.bin", FileMode.Open))
+                {
+                    if (fs.Length > 0)
+                    {
+                        settings = (Settings)binaryFormatter.Deserialize(fs);
+                    }
+                }
             }
             this.mainViewModel = new MainViewModel(settings);
             this.DataContext = mainViewModel;

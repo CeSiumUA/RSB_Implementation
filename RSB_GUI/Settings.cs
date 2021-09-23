@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace RSB_GUI
 {
+    [Serializable]
     public class Settings
     {
         public int BlockPower { get; set; }
