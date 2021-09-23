@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,12 +23,10 @@ namespace RSB_GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainViewModel mainViewModel;
+        private MainViewModel mainViewModel;
         public MainWindow()
         {
             InitializeComponent();
-            this.mainViewModel = new MainViewModel();
-            this.DataContext = mainViewModel;
         }
 
         private void SelectInputFileButton_Click(object sender, RoutedEventArgs e)
@@ -46,6 +47,24 @@ namespace RSB_GUI
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             mainViewModel.CancelEncryption();
+        }
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            var settings = mainViewModel.Settings;
+            var json = JsonSerializer.Serialize<Settings>(settings);
+            File.WriteAllText("settings.json", json);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Settings? settings = null;
+            if (File.Exists("settings.json"))
+            {
+                var json = File.ReadAllText("settings.json");
+                settings = JsonSerializer.Deserialize<Settings>(json);
+            }
+            this.mainViewModel = new MainViewModel(settings);
+            this.DataContext = mainViewModel;
         }
     }
 }

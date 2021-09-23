@@ -12,12 +12,36 @@ namespace RSB_GUI
     {
         private int blockSize;
         private int shiftValue;
-        public int Step = 0;
-        public int TotalSteps = 0;
-        public RSBEcnryptor(int blockSize, int shiftValue)
+        public int Step
+        {
+            get
+            {
+                return step;
+            }
+            set
+            {
+                step = value;
+                updateCurrentStep();
+            }
+        }
+        public int TotalSteps
+        {
+            get
+            {
+                return totalSteps;
+            }
+            set
+            {
+                totalSteps = value;
+                updateCurrentStep();
+            }
+        }
+        public Action updateCurrentStep;
+        public RSBEcnryptor(int blockSize, int shiftValue, Action stepUpdater = null)
         {
             this.blockSize = blockSize;
             this.shiftValue = shiftValue;
+            updateCurrentStep = stepUpdater;
         }
         public async Task<byte[]> EncryptBytes(byte[] bytes, CancellationToken cancellation = default)
         {
@@ -62,5 +86,8 @@ namespace RSB_GUI
             bytesList.AddRange(Enumerable.Repeat<byte>(0, remnantBytesCount));
             return bytesList.ToArray();
         }
+
+        private int totalSteps;
+        private int step;
     }
 }
