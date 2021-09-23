@@ -132,7 +132,7 @@ namespace RSB_GUI
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         public MainViewModel(Settings settings = null)
         {
             Settings = settings ?? new Settings();

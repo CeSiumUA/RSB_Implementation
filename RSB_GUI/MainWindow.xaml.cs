@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,17 +51,17 @@ namespace RSB_GUI
         protected override void OnClosing(CancelEventArgs e)
         {
             var settings = mainViewModel.Settings;
-            var json = JsonSerializer.Serialize<Settings>(settings);
+            var json = JsonConvert.SerializeObject(settings);
             File.WriteAllText("settings.json", json);
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-            Settings? settings = null;
+            Settings settings = null;
             if (File.Exists("settings.json"))
             {
                 var json = File.ReadAllText("settings.json");
-                settings = JsonSerializer.Deserialize<Settings>(json);
+                settings = JsonConvert.DeserializeObject<Settings>(json);
             }
             this.mainViewModel = new MainViewModel(settings);
             this.DataContext = mainViewModel;
