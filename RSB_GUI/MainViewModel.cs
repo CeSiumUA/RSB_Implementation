@@ -34,7 +34,7 @@ namespace RSB_GUI
                 this.OnPropertyChanged();
             }
         }
-        public double BlockPower
+        public int BlockPower
         {
             get
             {
@@ -46,11 +46,11 @@ namespace RSB_GUI
                 this.OnPropertyChanged();
             }
         }
-        public double BlockLength
+        public int BlockLength
         {
             get
             {
-                return _blockPower * 64;
+                return 64 * (int)Math.Pow(2, this.BlockPower);
             }
         }
         public double ShiftValue
@@ -108,7 +108,7 @@ namespace RSB_GUI
 
         private string _inputFile = string.Empty;
         private string _outputFile = string.Empty;
-        private double _blockPower = 1;
+        private int _blockPower = 0;
         private double _shiftValue = 0;
         private bool _useCommonKey = false;
         private void OnPropertyChanged(string propertyName = null)

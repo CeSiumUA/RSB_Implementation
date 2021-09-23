@@ -13,7 +13,7 @@
         <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="882,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
         <Label Content="Вхідний файл:" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="366"/>
         <Label Content="Вихідний файл:" HorizontalAlignment="Left" Margin="516,47,0,0" VerticalAlignment="Top" Width="366"/>
-        <Slider HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Maximum="4" Orientation="Horizontal" Minimum="1" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>
+        <Slider HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Maximum="3" Orientation="Horizontal" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>
         <Label Content="Розмір блоку:" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="{Binding BlockLength}" HorizontalAlignment="Left" Margin="130,131,0,0" VerticalAlignment="Top" Width="36"/>
         <Label Content="Число зсуву:" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="120"/>
