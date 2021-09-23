@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI"
         mc:Ignorable="d"
-        Title="Шифратор ShiftRow" Height="498" Width="945">
+        Title="Шифратор ShiftRow" Height="331" Width="945">
     <Grid>
-        <TextBox HorizontalAlignment="Left" Text="{Binding InputFile}"  Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
+        <TextBox HorizontalAlignment="Left" Text="{Binding InputFile}"  Margin="10,73,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="366"/>
         <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="516,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
         <Button x:Name="SelectInputFileButton" Content="..." HorizontalAlignment="Left" Margin="376,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
         <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="882,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
@@ -18,6 +18,8 @@
         <Label Content="{Binding BlockLength}" HorizontalAlignment="Left" Margin="130,131,0,0" VerticalAlignment="Top" Width="36"/>
         <Label Content="Число зсуву:" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="120"/>
         <TextBox HorizontalAlignment="Left" Margin="10,188,0,0" TextWrapping="Wrap" Text="{Binding ShiftValue}" VerticalAlignment="Top" Width="120"/>
-        <CheckBox Content="Використовувати спыльний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>
+        <CheckBox Content="Використовувати спільний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>
+        <Button Content="Пуск" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="88" Click="Button_Click"/>
+        <Button Content="Сброс" HorizontalAlignment="Left" Margin="130,218,0,0" VerticalAlignment="Top" Width="88" Click="Button_Click_1"/>
     </Grid>
 </Window>

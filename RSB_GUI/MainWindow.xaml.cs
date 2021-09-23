@@ -37,5 +37,15 @@ namespace RSB_GUI
         {
             mainViewModel.SelectOutpuFile();
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await mainViewModel.StartEncryption();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            mainViewModel.CancelEncryption();
+        }
     }
 }

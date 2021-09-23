@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -53,7 +55,7 @@ namespace RSB_GUI
                 return 64 * (int)Math.Pow(2, this.BlockPower);
             }
         }
-        public double ShiftValue
+        public int ShiftValue
         {
             get
             {
@@ -84,6 +86,21 @@ namespace RSB_GUI
 
         }
 
+        public async Task StartEncryption()
+        {
+            this._cancellationTokenSource = new CancellationTokenSource();
+            RSBEcnryptor encryptor = new RSBEcnryptor(this.BlockLength, this.ShiftValue);
+            var fileBytes = File.ReadAllBytes(this.InputFile);
+            var encryptedBytes = await encryptor.EncryptBytes(fileBytes, _cancellationTokenSource.Token);
+            if (_cancellationTokenSource.IsCancellationRequested) return;
+            File.WriteAllBytes(this.OutputFile, encryptedBytes);
+        }
+
+        public void CancelEncryption()
+        {
+            this._cancellationTokenSource.Cancel();
+        }
+
         public void SelectInputFile()
         {
             using(var fileDialog =  new OpenFileDialog())
@@ -106,10 +123,11 @@ namespace RSB_GUI
             }
         }
 
+        private CancellationTokenSource _cancellationTokenSource;
         private string _inputFile = string.Empty;
         private string _outputFile = string.Empty;
         private int _blockPower = 0;
-        private double _shiftValue = 0;
+        private int _shiftValue = 0;
         private bool _useCommonKey = false;
         private void OnPropertyChanged(string propertyName = null)
         {
