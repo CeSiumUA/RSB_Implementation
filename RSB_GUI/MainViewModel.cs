@@ -132,6 +132,32 @@ namespace RSB_GUI
             }
         }
 
+        public bool UseEncryption
+        {
+            get
+            {
+                return Settings.UseEncryption;
+            }
+            set
+            {
+                Settings.UseEncryption = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public bool UseDecryption
+        {
+            get
+            {
+                return !Settings.UseEncryption;
+            }
+            set
+            {
+                Settings.UseEncryption = !value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public MainViewModel(Settings settings = null)
         {
@@ -152,13 +178,21 @@ namespace RSB_GUI
             new Task(async () =>
             {
                 var fileBytes = File.ReadAllBytes(this.InputFile);
-                var encryptedBytes = await encryptor.EncryptBytes(fileBytes, _cancellationTokenSource.Token);
+                byte[] processedBytes = null;
+                if (UseEncryption)
+                {
+                    processedBytes = await encryptor.EncryptBytes(fileBytes, _cancellationTokenSource.Token);
+                }
+                else
+                {
+                    processedBytes = await encryptor.DecryptBytes(fileBytes, _cancellationTokenSource.Token);
+                }
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
                     this.IsEncryptionRunning = false;
                     return;
                 }
-                File.WriteAllBytes(this.OutputFile, encryptedBytes);
+                File.WriteAllBytes(this.OutputFile, processedBytes);
                 this.IsEncryptionRunning = false;
                 this.ElapsedTime = stopWatch.Elapsed;
             }).Start();
@@ -195,6 +229,7 @@ namespace RSB_GUI
         private bool _isEncryptionRunning = false;
         RSBEcnryptor encryptor = null;
         private TimeSpan _elapsedTime;
+
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

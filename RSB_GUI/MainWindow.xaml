@@ -23,5 +23,7 @@
         <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" Margin="130,259,0,0" VerticalAlignment="Top" Width="88" Click="Button_Click_1"/>
         <ProgressBar Minimum="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}" HorizontalAlignment="Left" Height="20" Margin="305,259,0,0" VerticalAlignment="Top" Width="175"/>
         <Label Content="{Binding ElapsedTime}" HorizontalAlignment="Left" Margin="485,256,0,0" VerticalAlignment="Top" Height="26"/>
+        <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" Margin="10,224,0,0" VerticalAlignment="Top"/>
+        <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" Margin="130,224,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
