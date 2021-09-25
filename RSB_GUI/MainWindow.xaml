@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Шифратор ShiftRow" Height="355" Width="945" Loaded="Window_Loaded_1">
+        Title="Примітив ShiftRow" Height="355" Width="945" Loaded="Window_Loaded_1">
     <Grid>
         <TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">
-                <Grid Background="#FFE5E5E5">
+                <Grid>
                     <TextBox HorizontalAlignment="Left" Text="{Binding InputFile}"  Margin="10,73,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="366"/>
                     <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="479,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
                     <Button x:Name="SelectInputFileButton" Content="..." HorizontalAlignment="Left" Margin="376,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
@@ -32,9 +32,21 @@
                     <Button x:Name="OutputFileGisto" Content="Гісто" HorizontalAlignment="Left" Margin="868,73,0,0" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Гістограма">
-                <Grid Background="#FFE5E5E5">
-                    <oxy:PlotView Model="{Binding HistogramPlotModel}"/>
+            <TabItem Header="Гісто">
+                <Grid>
+                    <TabControl>
+                        <TabItem Header="Гістограма">
+                            <Grid>
+                                <oxy:PlotView Model="{Binding HistogramPlotModel}"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Таблиця">
+                            <Grid>
+                                <DataGrid x:Name="HistogramDataGrid">
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </TabItem>
         </TabControl>

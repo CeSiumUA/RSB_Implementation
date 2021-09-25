@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,6 +27,7 @@ namespace RSB_GUI
             set
             {
                 Settings.InputFilePath = value;
+                Histo(HistoFileSource.Input);
                 this.OnPropertyChanged();
             }
         }
@@ -40,6 +40,7 @@ namespace RSB_GUI
             set
             {
                 Settings.OutputFilePath = value;
+                Histo(HistoFileSource.Output);
                 this.OnPropertyChanged();
             }
         }
@@ -176,6 +177,32 @@ namespace RSB_GUI
             }
         }
 
+        public Histogram Histogram
+        {
+            get
+            {
+                return _histogram;
+            }
+            set
+            {
+                _histogram = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public LabelValue[] HistogramAsLabeledValues
+        {
+            get
+            {
+                LabelValue[] labelValues = new LabelValue[Histogram.HistogramValues.Length];
+                for( int x = 0; x < labelValues.Length; x++)
+                {
+                    labelValues[x] = new LabelValue(x, Histogram.HistogramValues[x]);
+                }
+                return labelValues;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public MainViewModel(Settings settings = null)
         {
@@ -246,23 +273,23 @@ namespace RSB_GUI
         public void Histo(HistoFileSource histoFileSource = HistoFileSource.Input)
         {
             var bytes = File.ReadAllBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
-            var histogram = new Histogram(bytes);
+            this.Histogram = new Histogram(bytes);
             string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
-            var pointsList = new Point[histogram.HistogramValues.Length];
+            var pointsList = new LabelValue[this.Histogram.HistogramValues.Length];
             for(int x = 0; x < pointsList.Length; x++)
             {
-                pointsList[x] = new Point(x, histogram.HistogramValues[x]);
+                pointsList[x] = new LabelValue(x, this.Histogram.HistogramValues[x]);
             }
-            pointsList = pointsList.Where(x => x.Y != 0).ToArray();
+            pointsList = pointsList.Where(x => x.Value != 0).ToArray();
             this.HistogramPlotModel = new PlotModel()
             {
-                Title = $"Гістограма {fileType} файлу"
+                Title = $"Гістограма {fileType} файлу, ентропія: {this.Histogram.Entropy}"
             };
             this.HistogramPlotModel.Axes.Add(new CategoryAxis
             {
                 Position = AxisPosition.Bottom,
                 ItemsSource = pointsList,
-                LabelField = "X",
+                LabelField = "Label",
                 AxislineStyle = LineStyle.Solid,
                 MinorGridlineStyle = LineStyle.None,
                 MajorGridlineStyle = LineStyle.None,
@@ -285,7 +312,7 @@ namespace RSB_GUI
             this.HistogramPlotModel.Series.Add(new ColumnSeries
             {
                 ItemsSource = pointsList,
-                ValueField = "Y",
+                ValueField = "Value",
                 StrokeThickness = 1
             });
         }
@@ -294,6 +321,7 @@ namespace RSB_GUI
         private bool _isEncryptionRunning = false;
         RSBEcnryptor encryptor = null;
         private TimeSpan _elapsedTime;
+        private Histogram _histogram;
         private PlotModel _histogramPlotModel = new PlotModel();
         private void OnPropertyChanged(string propertyName = null)
         {
