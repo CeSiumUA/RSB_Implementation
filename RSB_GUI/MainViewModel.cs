@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using TickStyle = OxyPlot.Axes.TickStyle;
 
 namespace RSB_GUI
 {
@@ -158,6 +163,19 @@ namespace RSB_GUI
             }
         }
 
+        public PlotModel HistogramPlotModel
+        {
+            get
+            {
+                return _histogramPlotModel;
+            }
+            set
+            {
+                _histogramPlotModel = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public MainViewModel(Settings settings = null)
         {
@@ -229,13 +247,45 @@ namespace RSB_GUI
         {
             var bytes = File.ReadAllBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
             var histogram = new Histogram(bytes);
+            string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
+            var pointsList = new Point[histogram.HistogramValues.Length];
+            for(int x = 0; x < pointsList.Length; x++)
+            {
+                pointsList[x] = new Point(x, histogram.HistogramValues[x]);
+            }
+            this.HistogramPlotModel = new PlotModel()
+            {
+                Title = $"Гістограма {fileType} файлу"
+            };
+            this.HistogramPlotModel.Axes.Add(new CategoryAxis
+            {
+                Position = AxisPosition.Bottom,
+                ItemsSource = pointsList,
+                LabelField = "X",
+                AxislineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Solid,
+                MajorGridlineStyle = LineStyle.Solid,
+            });
+            this.HistogramPlotModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                MinorGridlineStyle = LineStyle.Solid,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinimumPadding = 0,
+                AbsoluteMinimum = 0,
+            });
+            this.HistogramPlotModel.Series.Add(new ColumnSeries
+            {
+                ItemsSource = pointsList,
+                ValueField = "Y",
+            });
         }
 
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isEncryptionRunning = false;
         RSBEcnryptor encryptor = null;
         private TimeSpan _elapsedTime;
-
+        private PlotModel _histogramPlotModel = new PlotModel();
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

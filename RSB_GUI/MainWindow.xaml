@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RSB_GUI"
+        xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="Шифратор ShiftRow" Height="355" Width="945" Loaded="Window_Loaded_1">
     <Grid>
@@ -34,6 +34,7 @@
             </TabItem>
             <TabItem Header="Гістограма">
                 <Grid Background="#FFE5E5E5">
+                    <oxy:PlotView Model="{Binding HistogramPlotModel}"/>
                 </Grid>
             </TabItem>
         </TabControl>
