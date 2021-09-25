@@ -25,5 +25,7 @@
         <Label Content="{Binding ElapsedTime}" HorizontalAlignment="Left" Margin="485,256,0,0" VerticalAlignment="Top" Height="26"/>
         <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" Margin="10,224,0,0" VerticalAlignment="Top"/>
         <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" Margin="130,224,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="InputFileGisto" Content="Гісто" HorizontalAlignment="Left" Margin="399,73,0,0" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
+        <Button x:Name="OutputFileGisto" Content="Гісто" HorizontalAlignment="Left" Margin="868,73,0,0" VerticalAlignment="Top" Width="36" Height="18"/>
     </Grid>
 </Window>

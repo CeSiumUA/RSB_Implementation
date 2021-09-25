@@ -76,5 +76,10 @@ namespace RSB_GUI
             this.mainViewModel = new MainViewModel(settings);
             this.DataContext = mainViewModel;
         }
+
+        private void InputFileGisto_Click(object sender, RoutedEventArgs e)
+        {
+            this.mainViewModel.Histo();
+        }
     }
 }

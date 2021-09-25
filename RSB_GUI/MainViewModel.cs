@@ -225,6 +225,12 @@ namespace RSB_GUI
             }
         }
 
+        public void Histo(HistoFileSource histoFileSource = HistoFileSource.Input)
+        {
+            var bytes = File.ReadAllBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
+            var histogram = new Histogram(bytes);
+        }
+
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isEncryptionRunning = false;
         RSBEcnryptor encryptor = null;
@@ -233,6 +239,11 @@ namespace RSB_GUI
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public enum HistoFileSource
+        {
+            Input,
+            Output
         }
     }
 }
