@@ -253,6 +253,7 @@ namespace RSB_GUI
             {
                 pointsList[x] = new Point(x, histogram.HistogramValues[x]);
             }
+            pointsList = pointsList.Where(x => x.Y != 0).ToArray();
             this.HistogramPlotModel = new PlotModel()
             {
                 Title = $"Гістограма {fileType} файлу"
@@ -263,21 +264,29 @@ namespace RSB_GUI
                 ItemsSource = pointsList,
                 LabelField = "X",
                 AxislineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Solid,
-                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                MajorGridlineStyle = LineStyle.None,
+                PositionAtZeroCrossing = true,
+                AxislineThickness = 1,
+                TickStyle = TickStyle.Crossing,
+                Angle = 90
             });
             this.HistogramPlotModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                MinorGridlineStyle = LineStyle.Solid,
-                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineStyle = LineStyle.Dot,
                 MinimumPadding = 0,
                 AbsoluteMinimum = 0,
+                TickStyle = TickStyle.Outside,
+                AxislineThickness = 1,
+                AxislineStyle = LineStyle.Solid,
             });
             this.HistogramPlotModel.Series.Add(new ColumnSeries
             {
                 ItemsSource = pointsList,
                 ValueField = "Y",
+                StrokeThickness = 1
             });
         }
 
