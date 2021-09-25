@@ -79,7 +79,17 @@ namespace RSB_GUI
 
         private void InputFileGisto_Click(object sender, RoutedEventArgs e)
         {
-            this.mainViewModel.Histo();
+            ShowHisto(MainViewModel.HistoFileSource.Input);
+        }
+
+        private void OutputFileGisto_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHisto(MainViewModel.HistoFileSource.Output);
+        }
+        private void ShowHisto(MainViewModel.HistoFileSource histoFileSource)
+        {
+            this.mainViewModel.Histo(histoFileSource);
+            this.MainTabControl.SelectedIndex = 1;
         }
     }
 }
