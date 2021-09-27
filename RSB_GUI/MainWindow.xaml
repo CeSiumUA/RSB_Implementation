@@ -5,31 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив ShiftRow" Height="355" Width="945" Loaded="Window_Loaded_1">
+        Title="Примітив ShiftRow" Height="356" Width="500" Loaded="Window_Loaded_1">
     <Grid>
         <TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">
                 <Grid>
-                    <TextBox HorizontalAlignment="Left" Text="{Binding InputFile}"  Margin="10,73,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="366"/>
-                    <TextBox HorizontalAlignment="Left" Text="{Binding OutputFile}" Margin="479,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="366"/>
-                    <Button x:Name="SelectInputFileButton" Content="..." HorizontalAlignment="Left" Margin="376,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
-                    <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Left" Margin="845,73,0,0" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
-                    <Label Content="Вхідний файл:" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="366"/>
-                    <Label Content="Вихідний файл:" HorizontalAlignment="Left" Margin="472,47,0,0" VerticalAlignment="Top" Width="366"/>
-                    <Slider HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Maximum="3" Orientation="Horizontal" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>
-                    <Label Content="Розмір блоку:" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Label Content="{Binding BlockLength}" HorizontalAlignment="Left" Margin="130,131,0,0" VerticalAlignment="Top" Width="36"/>
-                    <Label Content="Параметр зсуву:" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Margin="10,188,0,0" TextWrapping="Wrap" Text="{Binding Path=ShiftValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+                    <StackPanel Margin="10,10,10,10">
+                        <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <WrapPanel>
+                            <TextBox HorizontalAlignment="Center" Text="{Binding InputFile}"  TextWrapping="NoWrap" Width="366" VerticalAlignment="Top"/>
+                            <Button x:Name="SelectInputFileButton" Content="..."  HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
+                            <Button x:Name="InputFileGisto" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
+                        </WrapPanel>
+                        <Label Content="Вихідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <WrapPanel>
+                            <TextBox HorizontalAlignment="Center" Text="{Binding OutputFile}" TextWrapping="NoWrap" Width="366" VerticalAlignment="Top"/>
+                            <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
+                            <Button x:Name="OutputFileGisto" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
+                        </WrapPanel>
+                        <Label Content="Розмір блоку:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <WrapPanel>
+                            <Slider HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Maximum="3" Orientation="Horizontal" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>
+                            <Label Content="{Binding BlockLength}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        </WrapPanel>
+                        <Label Content="Параметр зсуву:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=ShiftValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" BorderThickness="0,0,0,1"/>
+                        <WrapPanel>
+                            <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,0"/>
+                            <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"/>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,0,10,0"/>
+                            <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1"/>
+                        </WrapPanel>
+                        <WrapPanel Margin="0,5,0,0">
+                            <ProgressBar Minimum="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}" Width="256" HorizontalAlignment="Center"/>
+                            <Label Content="{Binding ElapsedTime}" HorizontalAlignment="Right"/>
+                        </WrapPanel>
+                    </StackPanel>
                     <!--<CheckBox Content="Використовувати спільний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>-->
-                    <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" Margin="10,259,0,0" VerticalAlignment="Top" Width="88" Click="Button_Click"/>
-                    <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" Margin="130,259,0,0" VerticalAlignment="Top" Width="88" Click="Button_Click_1"/>
-                    <ProgressBar Minimum="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}" HorizontalAlignment="Left" Height="20" Margin="305,259,0,0" VerticalAlignment="Top" Width="175"/>
-                    <Label Content="{Binding ElapsedTime}" HorizontalAlignment="Left" Margin="485,256,0,0" VerticalAlignment="Top" Height="26"/>
-                    <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" Margin="10,224,0,0" VerticalAlignment="Top"/>
-                    <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" Margin="130,224,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="InputFileGisto" Content="Гісто" HorizontalAlignment="Left" Margin="399,73,0,0" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
-                    <Button x:Name="OutputFileGisto" Content="Гісто" HorizontalAlignment="Left" Margin="868,73,0,0" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Гісто">
