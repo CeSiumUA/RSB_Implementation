@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using RSB_GUI.Utils;
 using TickStyle = OxyPlot.Axes.TickStyle;
 
 namespace RSB_GUI
@@ -253,22 +254,53 @@ namespace RSB_GUI
             });
             new Task(async () =>
             {
-                var fileBytes = File.ReadAllBytes(this.InputFile);
-                byte[] processedBytes = null;
-                if (UseEncryption)
+                var fileBytes = ReadFileBytes(this.InputFile);
+                
+                if (fileBytes is SmallFileBytes)
                 {
-                    processedBytes = await encryptor.EncryptBytes(fileBytes, _cancellationTokenSource.Token);
+                    byte[] processedBytes = null;
+                    var smallFileBytes = (fileBytes as SmallFileBytes).Bytes;
+                    if (UseEncryption)
+                    {
+                        processedBytes = await encryptor.EncryptBytes(smallFileBytes, _cancellationTokenSource.Token);
+                    }
+                    else
+                    {
+                        processedBytes = await encryptor.DecryptBytes(smallFileBytes, _cancellationTokenSource.Token);
+                    }
+                    if (_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        this.IsEncryptionRunning = false;
+                        return;
+                    }
+                    File.WriteAllBytes(this.OutputFile, processedBytes);
                 }
-                else
+                if(fileBytes is LargeFileBytes)
                 {
-                    processedBytes = await encryptor.DecryptBytes(fileBytes, _cancellationTokenSource.Token);
+                    var largeFileBytes = fileBytes as LargeFileBytes;
+                    using (FileStream fs = new FileStream(this.OutputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                    {
+                        foreach (var bytes in largeFileBytes.Bytes)
+                        {
+                            byte[] processedBytes = null;
+                            if (UseEncryption)
+                            {
+                                processedBytes = await encryptor.EncryptBytes(bytes, _cancellationTokenSource.Token);
+                            }
+                            else
+                            {
+                                processedBytes = await encryptor.DecryptBytes(bytes, _cancellationTokenSource.Token);
+                            }
+                            if (_cancellationTokenSource.IsCancellationRequested)
+                            {
+                                this.IsEncryptionRunning = false;
+                                return;
+                            }
+                            await fs.WriteAsync(processedBytes, 0, processedBytes.Length, _cancellationTokenSource.Token);
+                        }
+                    }
                 }
-                if (_cancellationTokenSource.IsCancellationRequested)
-                {
-                    this.IsEncryptionRunning = false;
-                    return;
-                }
-                File.WriteAllBytes(this.OutputFile, processedBytes);
+                
                 this.IsEncryptionRunning = false;
                 this.ElapsedTime = stopWatch.Elapsed;
             }).Start();
@@ -303,7 +335,9 @@ namespace RSB_GUI
 
         public void Histo(HistoFileSource histoFileSource = HistoFileSource.Input)
         {
-            var bytes = File.ReadAllBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
+            var fileBytes = ReadFileBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
+            if (fileBytes is LargeFileBytes) return;
+            var bytes = (fileBytes as SmallFileBytes).Bytes;
             this.Histogram = new Histogram(bytes);
             string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
             var pointsList = new LabelValue[this.Histogram.HistogramValues.Length];
@@ -362,6 +396,35 @@ namespace RSB_GUI
         {
             Input,
             Output
+        }
+        private FileBytes ReadFileBytes(string path)
+        {
+            var fileLength = new FileInfo(path).Length;
+
+            if (fileLength >= (Int32.MaxValue - 100))
+            {
+                var chunks = fileLength / (Int32.MaxValue - 100);
+                chunks += fileLength % (Int32.MaxValue - 100) == 0 ? 0 : 1;
+
+                List<byte[]> fileChunks = new List<byte[]>();
+                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    for(int x = 0; x <  chunks; x++)
+                    {
+                        byte[] chunkBytes = new byte[Int32.MaxValue - 100];
+                        fs.Read(chunkBytes, 0, Int32.MaxValue - 100);
+                        fileChunks.Add(chunkBytes);
+                    }
+                }
+                LargeFileBytes lfb = new LargeFileBytes();
+                lfb.Bytes = fileChunks;
+                return lfb;
+            }
+
+            return new SmallFileBytes()
+            {
+                Bytes = File.ReadAllBytes(path)
+            };
         }
     }
 }
