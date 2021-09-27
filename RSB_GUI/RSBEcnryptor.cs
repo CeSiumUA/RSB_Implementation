@@ -43,7 +43,7 @@ namespace RSB_GUI
             this.shiftValue = shiftValue;
             updateCurrentStep = stepUpdater;
         }
-        public async Task<byte[]> EncryptBytes(byte[] bytes, CancellationToken cancellation = default)
+        public async Task<byte[]> EncryptBytes(byte[] bytes, CancellationToken cancellationToken = default)
         {
             bytes = FillVoidCells(bytes);
             var bytesBlockCount = blockSize / 8;
@@ -52,7 +52,7 @@ namespace RSB_GUI
             byte[] encryptedBytes = new byte[bytes.Length];
             for(int x = 0; x < encryptionSteps; x++)
             {
-                if (cancellation.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested) break;
 
                 byte[] blockBytes = new byte[bytesBlockCount];
 
@@ -77,6 +77,43 @@ namespace RSB_GUI
                 Step = x;
             }
             return encryptedBytes.ToArray();
+        }
+        public async Task<byte[]> DecryptBytes(byte[] encryptedBytes, CancellationToken cancellationToken = default)
+        {
+            byte[] decryptedBytes = new byte[encryptedBytes.Length];
+            var bytesBlockCount = blockSize / 8;
+            var encryptionSteps = encryptedBytes.Length / bytesBlockCount;
+            TotalSteps = encryptionSteps;
+            for(int x = 0;  x < encryptionSteps; x++)
+            {
+                if (cancellationToken.IsCancellationRequested) break;
+
+                byte[] blockBytes = new byte[bytesBlockCount];
+
+                Array.Copy(encryptedBytes, x * bytesBlockCount, blockBytes, 0, bytesBlockCount);
+
+                BitArray bitArray = new BitArray(blockBytes);
+
+                for(int i = 0; i < shiftValue; i++)
+                {
+                    var temp = bitArray[0];
+
+                    for(int j = 0; j < bitArray.Length - 1; j++)
+                    {
+                        bitArray[j] = bitArray[j + 1];
+                    }
+
+                    bitArray[bitArray.Length - 1] = temp;
+                }
+
+                bitArray.CopyTo(blockBytes, 0);
+
+                Array.Copy(blockBytes, 0, decryptedBytes, x * bytesBlockCount, blockBytes.Length);
+
+                Step = x;
+            }
+
+            return decryptedBytes;
         }
         private byte[] FillVoidCells(byte[] bytes)
         {

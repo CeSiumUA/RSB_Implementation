@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +26,7 @@ namespace RSB_GUI
     public partial class MainWindow : Window
     {
         private MainViewModel mainViewModel;
+        private const string settingsFileName = "settings";
         public MainWindow()
         {
             InitializeComponent();
@@ -51,20 +54,44 @@ namespace RSB_GUI
         protected override void OnClosing(CancelEventArgs e)
         {
             var settings = mainViewModel.Settings;
-            var json = JsonSerializer.Serialize<Settings>(settings);
-            File.WriteAllText("settings.json", json);
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream(settingsFileName, FileMode.OpenOrCreate))
+            {
+                binaryFormatter.Serialize(fs, settings);
+            }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-            Settings? settings = null;
-            if (File.Exists("settings.json"))
+            Settings settings = null;
+            if (File.Exists(settingsFileName))
             {
-                var json = File.ReadAllText("settings.json");
-                settings = JsonSerializer.Deserialize<Settings>(json);
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                using (FileStream fs = new FileStream(settingsFileName, FileMode.Open))
+                {
+                    if (fs.Length > 0)
+                    {
+                        settings = (Settings)binaryFormatter.Deserialize(fs);
+                    }
+                }
             }
             this.mainViewModel = new MainViewModel(settings);
             this.DataContext = mainViewModel;
+        }
+
+        private void InputFileGisto_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHisto(MainViewModel.HistoFileSource.Input);
+        }
+
+        private void OutputFileGisto_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHisto(MainViewModel.HistoFileSource.Output);
+        }
+        private void ShowHisto(MainViewModel.HistoFileSource histoFileSource)
+        {
+            this.mainViewModel.Histo(histoFileSource);
+            this.MainTabControl.SelectedIndex = 1;
         }
     }
 }

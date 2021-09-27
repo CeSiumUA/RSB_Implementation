@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace RSB_GUI
 {
+    [Serializable]
     public class Settings
     {
         public int BlockPower { get; set; }
@@ -14,5 +15,6 @@ namespace RSB_GUI
         public string OutputFilePath { get; set; } = string.Empty;
         public bool UseCommonKey { get; set; }
         public byte[] CommonKey { get; set; }
+        public bool UseEncryption { get; set; } = true;
     }
 }
