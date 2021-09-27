@@ -42,7 +42,7 @@
                         </TabItem>
                         <TabItem Header="Таблиця">
                             <Grid>
-                                <DataGrid x:Name="HistogramDataGrid">
+                                <DataGrid x:Name="HistogramDataGrid" AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}">
                                 </DataGrid>
                             </Grid>
                         </TabItem>

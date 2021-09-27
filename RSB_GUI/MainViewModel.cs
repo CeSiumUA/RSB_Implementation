@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -190,6 +191,36 @@ namespace RSB_GUI
             }
         }
 
+        public DataView HistogramDatatable
+        {
+            get
+            {
+                int columns = 8;
+                var valuesList = this.HistogramAsLabeledValues.ToList();
+                var remnantValues = columns - (valuesList.Count % columns);
+                valuesList.AddRange(Enumerable.Repeat<LabelValue>(new LabelValue(null, null), remnantValues));
+
+                DataTable dataTable = new DataTable();
+
+                for (int clmn = 0; clmn < columns; clmn++)
+                {
+                    dataTable.Columns.Add(new DataColumn(clmn.ToString()));
+                }
+
+                for (int row = 0; row < valuesList.Count / columns; row++)
+                {
+                    var newRow = dataTable.NewRow();
+                    for (int column = 0; column < columns; column++)
+                    {
+                        newRow[column] = valuesList[row * columns + column].Value ?? null;
+                    }
+                    dataTable.Rows.Add(newRow);
+                }
+
+                return dataTable.DefaultView;
+            }
+        }
+
         public LabelValue[] HistogramAsLabeledValues
         {
             get
@@ -321,7 +352,7 @@ namespace RSB_GUI
         private bool _isEncryptionRunning = false;
         RSBEcnryptor encryptor = null;
         private TimeSpan _elapsedTime;
-        private Histogram _histogram;
+        private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
         private void OnPropertyChanged(string propertyName = null)
         {
