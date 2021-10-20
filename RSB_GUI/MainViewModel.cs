@@ -335,51 +335,55 @@ namespace RSB_GUI
 
         public void Histo(HistoFileSource histoFileSource = HistoFileSource.Input)
         {
-            var fileBytes = ReadFileBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
-            if (fileBytes is LargeFileBytes) return;
-            var bytes = (fileBytes as SmallFileBytes).Bytes;
-            this.Histogram = new Histogram(bytes);
-            string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
-            var pointsList = new LabelValue[this.Histogram.HistogramValues.Length];
-            for(int x = 0; x < pointsList.Length; x++)
+            string path = histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile;
+            if (File.Exists(path))
             {
-                pointsList[x] = new LabelValue(x, this.Histogram.HistogramValues[x]);
+                var fileBytes = ReadFileBytes(histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile);
+                if (fileBytes is LargeFileBytes) return;
+                var bytes = (fileBytes as SmallFileBytes).Bytes;
+                this.Histogram = new Histogram(bytes);
+                string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
+                var pointsList = new LabelValue[this.Histogram.HistogramValues.Length];
+                for (int x = 0; x < pointsList.Length; x++)
+                {
+                    pointsList[x] = new LabelValue(x, this.Histogram.HistogramValues[x]);
+                }
+                pointsList = pointsList.Where(x => x.Value != 0).ToArray();
+                this.HistogramPlotModel = new PlotModel()
+                {
+                    Title = $"Гістограма {fileType} файлу, ентропія: {this.Histogram.Entropy}"
+                };
+                this.HistogramPlotModel.Axes.Add(new CategoryAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    ItemsSource = pointsList,
+                    LabelField = "Label",
+                    AxislineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.None,
+                    MajorGridlineStyle = LineStyle.None,
+                    PositionAtZeroCrossing = true,
+                    AxislineThickness = 1,
+                    TickStyle = TickStyle.Crossing,
+                    Angle = 90
+                });
+                this.HistogramPlotModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinimumPadding = 0,
+                    AbsoluteMinimum = 0,
+                    TickStyle = TickStyle.Outside,
+                    AxislineThickness = 1,
+                    AxislineStyle = LineStyle.Solid,
+                });
+                this.HistogramPlotModel.Series.Add(new ColumnSeries
+                {
+                    ItemsSource = pointsList,
+                    ValueField = "Value",
+                    StrokeThickness = 1
+                });
             }
-            pointsList = pointsList.Where(x => x.Value != 0).ToArray();
-            this.HistogramPlotModel = new PlotModel()
-            {
-                Title = $"Гістограма {fileType} файлу, ентропія: {this.Histogram.Entropy}"
-            };
-            this.HistogramPlotModel.Axes.Add(new CategoryAxis
-            {
-                Position = AxisPosition.Bottom,
-                ItemsSource = pointsList,
-                LabelField = "Label",
-                AxislineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.None,
-                MajorGridlineStyle = LineStyle.None,
-                PositionAtZeroCrossing = true,
-                AxislineThickness = 1,
-                TickStyle = TickStyle.Crossing,
-                Angle = 90
-            });
-            this.HistogramPlotModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                MinorGridlineStyle = LineStyle.Dot,
-                MajorGridlineStyle = LineStyle.Dot,
-                MinimumPadding = 0,
-                AbsoluteMinimum = 0,
-                TickStyle = TickStyle.Outside,
-                AxislineThickness = 1,
-                AxislineStyle = LineStyle.Solid,
-            });
-            this.HistogramPlotModel.Series.Add(new ColumnSeries
-            {
-                ItemsSource = pointsList,
-                ValueField = "Value",
-                StrokeThickness = 1
-            });
         }
 
         private CancellationTokenSource _cancellationTokenSource;
