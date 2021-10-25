@@ -10,7 +10,7 @@ namespace RSB_GUI
     public class Settings
     {
         public int BlockPower { get; set; }
-        public int LogBlockLength { get; set; }
+        public int LogBlockLength { get; set; } = 8;
         public int ShiftValue { get; set; }
         public string InputFilePath { get; set; } = string.Empty;
         public string OutputFilePath { get; set; } = string.Empty;
