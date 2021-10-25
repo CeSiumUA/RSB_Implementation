@@ -65,6 +65,29 @@ namespace RSB_GUI
                 return 64 * (int)Math.Pow(2, this.BlockPower);
             }
         }
+        public int LogorithmicalBlockLength
+        {
+            get
+            {
+                return logorithmicalBlockLength;
+            }
+            set
+            {
+                logorithmicalBlockLength = value;
+            }
+        }
+        public int[] BlockLengthValues
+        {
+            get
+            {
+                var list = new List<double>();
+                for(int x = 3; x <= 9; x++)
+                {
+                    list.Add(Math.Pow(2, x));
+                }
+                return list.Select(x => (int)x).ToArray();
+            }
+        }
         public int ShiftValue
         {
             get
@@ -247,7 +270,7 @@ namespace RSB_GUI
             stopWatch.Restart();
             this.IsEncryptionRunning = true;
             this._cancellationTokenSource = new CancellationTokenSource();
-            encryptor = new RSBEcnryptor(this.BlockLength, this.ShiftValue, () =>
+            encryptor = new RSBEcnryptor(this.LogorithmicalBlockLength, this.ShiftValue, () =>
             {
                 this.ElapsedTime = stopWatch.Elapsed;
                 this.OnPropertyChanged();
@@ -393,6 +416,7 @@ namespace RSB_GUI
         private TimeSpan _elapsedTime;
         private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
+        private int logorithmicalBlockLength = 8;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
