@@ -69,11 +69,11 @@ namespace RSB_GUI
         {
             get
             {
-                return logorithmicalBlockLength;
+                return Settings.LogBlockLength;
             }
             set
             {
-                logorithmicalBlockLength = value;
+                Settings.LogBlockLength = value;
             }
         }
         public int[] BlockLengthValues
