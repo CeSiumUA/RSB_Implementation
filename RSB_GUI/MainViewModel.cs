@@ -348,7 +348,8 @@ namespace RSB_GUI
                 {
                     pointsList[x] = new LabelValue(x, this.Histogram.HistogramValues[x]);
                 }
-                pointsList = pointsList.Where(x => x.Value != 0).ToArray();
+                //FIXME Add option to choose or unchoose 0s
+                pointsList = pointsList/*.Where(x => x.Value != 0)*/.ToArray();
                 this.HistogramPlotModel = new PlotModel()
                 {
                     Title = $"Гістограма {fileType} файлу, ентропія: {this.Histogram.Entropy}"
