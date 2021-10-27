@@ -45,37 +45,47 @@ namespace RSB_GUI
         }
         public async Task<byte[]> EncryptBytes(byte[] bytes, CancellationToken cancellationToken = default)
         {
+            object lck = new object();
             bytes = FillVoidCells(bytes);
             var bytesBlockCount = blockSize / 8;
             var encryptionSteps = bytes.Length / bytesBlockCount;
             TotalSteps = encryptionSteps;
             byte[] encryptedBytes = new byte[bytes.Length];
-            for(int x = 0; x < encryptionSteps; x++)
+            List<Task> tasks = new List<Task>();
+            var runs = Enumerable.Range(0, encryptionSteps);
+            runs.ToList().ForEach(x =>
             {
-                if (cancellationToken.IsCancellationRequested) break;
-
-                byte[] blockBytes = new byte[bytesBlockCount];
-
-                Array.Copy(bytes, x * bytesBlockCount, blockBytes, 0, bytesBlockCount);
-
-                BitArray bitArray = new BitArray(blockBytes);
-
-                for(int i = 0; i < shiftValue; i++)
+                var shiftingTask = new Task(() =>
                 {
-                    var temp = bitArray[bitArray.Length - 1];
-                    for(int j = bitArray.Length - 1; j > 0; j--)
+                    if (cancellationToken.IsCancellationRequested) return;
+
+                    byte[] blockBytes = new byte[bytesBlockCount];
+
+                    Array.Copy(bytes, x * bytesBlockCount, blockBytes, 0, bytesBlockCount);
+
+                    BitArray bitArray = new BitArray(blockBytes);
+
+                    for (int i = 0; i < shiftValue; i++)
                     {
-                        bitArray[j] = bitArray[j - 1];
+                        var temp = bitArray[bitArray.Length - 1];
+                        for (int j = bitArray.Length - 1; j > 0; j--)
+                        {
+                            bitArray[j] = bitArray[j - 1];
+                        }
+                        bitArray[0] = temp;
                     }
-                    bitArray[0] = temp;
-                }
 
-                bitArray.CopyTo(blockBytes, 0);
+                    bitArray.CopyTo(blockBytes, 0);
 
-                Array.Copy(blockBytes, 0, encryptedBytes, x * bytesBlockCount, blockBytes.Length);
+                    Array.Copy(blockBytes, 0, encryptedBytes, x * bytesBlockCount, blockBytes.Length);
 
-                Step = x;
-            }
+                    Step++;
+                });
+                shiftingTask.Start();
+                tasks.Add(shiftingTask);
+            });
+            Task.WaitAll(tasks.ToArray());
+            TotalSteps = Step;
             return encryptedBytes.ToArray();
         }
         public async Task<byte[]> DecryptBytes(byte[] encryptedBytes, CancellationToken cancellationToken = default)
