@@ -368,7 +368,7 @@ namespace RSB_GUI
                 string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
                 var pointsList = new LabelValue[this.Histogram.HistogramValues.Length];
                 for (int x = 0; x < pointsList.Length; x++)
-                {
+                {  
                     pointsList[x] = new LabelValue(x, this.Histogram.HistogramValues[x]);
                 }
                 //FIXME Add option to choose or unchoose 0s
@@ -383,12 +383,13 @@ namespace RSB_GUI
                     ItemsSource = pointsList,
                     LabelField = "Label",
                     AxislineStyle = LineStyle.Solid,
-                    MinorGridlineStyle = LineStyle.None,
-                    MajorGridlineStyle = LineStyle.None,
-                    PositionAtZeroCrossing = true,
-                    AxislineThickness = 1,
-                    TickStyle = TickStyle.Crossing,
-                    Angle = 90
+                    AxislineThickness = 0.4,
+                    MinimumPadding = 0,
+                    AbsoluteMinimum = 0,
+                    TickStyle = TickStyle.Outside,
+                    Angle = 90,
+                    FontSize = 12,
+                    MajorStep = 8
                 });
                 this.HistogramPlotModel.Axes.Add(new LinearAxis
                 {
@@ -398,14 +399,16 @@ namespace RSB_GUI
                     MinimumPadding = 0,
                     AbsoluteMinimum = 0,
                     TickStyle = TickStyle.Outside,
-                    AxislineThickness = 1,
+                    AxislineThickness = 0.4,
                     AxislineStyle = LineStyle.Solid,
                 });
                 this.HistogramPlotModel.Series.Add(new ColumnSeries
                 {
                     ItemsSource = pointsList,
                     ValueField = "Value",
-                    StrokeThickness = 1
+                    StrokeThickness = 1,
+                    FillColor = OxyColor.FromArgb(255, 255, 0, 0),
+                    StrokeColor = OxyColor.FromArgb(255,255, 0, 0)
                 });
             }
         }

@@ -92,6 +92,8 @@ namespace RSB_GUI
         {
             this.mainViewModel.Histo(histoFileSource);
             this.MainTabControl.SelectedIndex = 1;
+            this.Width = 1200;
+            this.Height = 800;
         }
     }
 }
