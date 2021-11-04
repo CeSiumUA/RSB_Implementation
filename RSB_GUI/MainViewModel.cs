@@ -46,6 +46,14 @@ namespace RSB_GUI
                 this.OnPropertyChanged();
             }
         }
+
+        public string Enthrophy
+        {
+            get
+            {
+                return $"Ентропія: {this.Histogram?.Entropy ?? 0}";
+            }
+        }
         public int BlockPower
         {
             get
@@ -233,6 +241,11 @@ namespace RSB_GUI
 
                 for (int row = 0; row < valuesList.Count / columns; row++)
                 {
+                    var newRowValues = valuesList.Skip(row * columns).Take(columns);
+                    if(newRowValues.All(x => x.Label == null && x.Value == null))
+                    {
+                        continue;
+                    }
                     var newRow = dataTable.NewRow();
                     for (int column = 0; column < columns; column++)
                     {

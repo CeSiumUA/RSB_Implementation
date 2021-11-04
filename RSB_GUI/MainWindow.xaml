@@ -57,7 +57,8 @@
                         </TabItem>
                         <TabItem Header="Таблиця">
                             <Grid>
-                                <DataGrid x:Name="HistogramDataGrid" AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}" ColumnWidth="*">
+                                <Label Content="{Binding Enthrophy}" HorizontalAlignment="Center" Margin="0,0,0,258" FontWeight="Bold"></Label>
+                                <DataGrid x:Name="HistogramDataGrid" AutoGenerateColumns="True" HeadersVisibility="All" ItemsSource="{Binding HistogramDatatable}" ColumnWidth="*" Margin="0,26,0,0">
                                 </DataGrid>
                             </Grid>
                         </TabItem>
