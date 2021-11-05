@@ -17,5 +17,6 @@ namespace RSB_GUI
         public bool UseCommonKey { get; set; }
         public byte[] CommonKey { get; set; }
         public bool UseEncryption { get; set; } = true;
+        public int TableColumnsCount { get; set; } = 8;
     }
 }

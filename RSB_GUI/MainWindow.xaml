@@ -57,7 +57,15 @@
                         </TabItem>
                         <TabItem Header="Таблиця">
                             <Grid>
-                                <Label Content="{Binding Enthrophy}" HorizontalAlignment="Center" Margin="0,0,0,258" FontWeight="Bold"></Label>
+                                <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,258">
+                                    <Label Content="{Binding Enthrophy}"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="Bold"></Label>
+                                    <ComboBox HorizontalAlignment="Center" IsEditable="True"
+                                              Width="100" VerticalAlignment="Top"
+                                              ItemsSource="{Binding AvailableTableColumns}"
+                                              SelectedValue="{Binding TableColumnsCount}" />
+                                </WrapPanel>
                                 <DataGrid x:Name="HistogramDataGrid" CanUserAddRows="False" CanUserDeleteRows="False"
                                           CanUserResizeRows="False" IsReadOnly="True"
                                           AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}"

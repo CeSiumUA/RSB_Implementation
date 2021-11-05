@@ -24,12 +24,22 @@ namespace RSB_GUI
         {
             get
             {
-                return tableColumnsCount;
+                return Settings.TableColumnsCount;
             }
             set
             {
-                tableColumnsCount = value;
-                this.OnPropertyChanged();
+                if(Settings.TableColumnsCount != value)
+                {
+                    Settings.TableColumnsCount = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+        public int[] AvailableTableColumns
+        {
+            get
+            {
+                return new int[] { 4, 8, 16, 32, 64, 128, 256, 512 };
             }
         }
         public string InputFile
@@ -239,33 +249,37 @@ namespace RSB_GUI
         {
             get
             {
-                int columns = 8;
-                var valuesList = this.HistogramAsLabeledValues.ToList();
-                var remnantValues = columns - (valuesList.Count % columns);
-                valuesList.AddRange(Enumerable.Repeat<LabelValue>(new LabelValue(null, null), remnantValues));
-
-                DataTable dataTable = new DataTable();
-
-                for (int clmn = 0; clmn < columns; clmn++)
+                int columns = this.TableColumnsCount;
+                if (columns > 0)
                 {
-                    dataTable.Columns.Add(new DataColumn($"{clmn}"));
-                }
+                    var valuesList = this.HistogramAsLabeledValues.ToList();
+                    var remnantValues = columns - (valuesList.Count % columns);
+                    valuesList.AddRange(Enumerable.Repeat<LabelValue>(new LabelValue(null, null), remnantValues));
 
-                for (int row = 0; row < valuesList.Count / columns; row++)
-                {
-                    var newRowValues = valuesList.Skip(row * columns).Take(columns);
-                    if (newRowValues.All(x => x.Label == null && x.Value == null))
+                    DataTable dataTable = new DataTable();
+
+                    for (int clmn = 0; clmn < columns; clmn++)
                     {
-                        continue;
+                        dataTable.Columns.Add(new DataColumn($"{clmn}"));
                     }
-                    var newRow = dataTable.NewRow();
-                    for (int column = 0; column < columns; column++)
+
+                    for (int row = 0; row < valuesList.Count / columns; row++)
                     {
-                        newRow[column] = valuesList[row * columns + column].Value ?? null;
+                        var newRowValues = valuesList.Skip(row * columns).Take(columns);
+                        if (newRowValues.All(x => x.Label == null && x.Value == null))
+                        {
+                            continue;
+                        }
+                        var newRow = dataTable.NewRow();
+                        for (int column = 0; column < columns; column++)
+                        {
+                            newRow[column] = valuesList[row * columns + column].Value ?? null;
+                        }
+                        dataTable.Rows.Add(newRow);
                     }
-                    dataTable.Rows.Add(newRow);
+                    return dataTable.DefaultView;
                 }
-                return dataTable.DefaultView;
+                return null;
             }
         }
 
@@ -444,7 +458,6 @@ namespace RSB_GUI
         private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
         private int logorithmicalBlockLength = 8;
-        private int tableColumnsCount = 8;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
