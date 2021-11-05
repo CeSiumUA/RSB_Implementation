@@ -20,6 +20,18 @@ namespace RSB_GUI
     public class MainViewModel : INotifyPropertyChanged
     {
         public Settings Settings { get; set; }
+        public int TableColumnsCount
+        {
+            get
+            {
+                return tableColumnsCount;
+            }
+            set
+            {
+                tableColumnsCount = value;
+                this.OnPropertyChanged();
+            }
+        }
         public string InputFile
         {
             get
@@ -236,13 +248,13 @@ namespace RSB_GUI
 
                 for (int clmn = 0; clmn < columns; clmn++)
                 {
-                    dataTable.Columns.Add(new DataColumn(clmn.ToString()));
+                    dataTable.Columns.Add(new DataColumn($"{clmn}"));
                 }
 
                 for (int row = 0; row < valuesList.Count / columns; row++)
                 {
                     var newRowValues = valuesList.Skip(row * columns).Take(columns);
-                    if(newRowValues.All(x => x.Label == null && x.Value == null))
+                    if (newRowValues.All(x => x.Label == null && x.Value == null))
                     {
                         continue;
                     }
@@ -253,7 +265,6 @@ namespace RSB_GUI
                     }
                     dataTable.Rows.Add(newRow);
                 }
-
                 return dataTable.DefaultView;
             }
         }
@@ -433,6 +444,7 @@ namespace RSB_GUI
         private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
         private int logorithmicalBlockLength = 8;
+        private int tableColumnsCount = 8;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

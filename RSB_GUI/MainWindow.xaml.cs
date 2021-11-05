@@ -93,7 +93,18 @@ namespace RSB_GUI
             this.mainViewModel.Histo(histoFileSource);
             this.MainTabControl.SelectedIndex = 1;
             this.Width = 1200;
-            this.Height = 800;
+            this.Height = 850;
+        }
+
+        private void HistogramDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            var rowIndex = e.Row.GetIndex();
+            if (rowIndex % 2 == 0)
+            {
+                e.Row.Background = Brushes.LightGray;
+            }
+            e.Row.Header = (e.Row.GetIndex() * this.mainViewModel.TableColumnsCount);
+            e.Row.HorizontalContentAlignment = HorizontalAlignment.Center;
         }
     }
 }
