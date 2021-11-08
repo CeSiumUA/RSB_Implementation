@@ -19,11 +19,11 @@ namespace RSB_GUI.Windows
     /// </summary>
     public partial class TableWindow : Window
     {
-        private readonly MainViewModel _viewModel;
-        public TableWindow(MainViewModel mainViewModel)
+        private readonly TableViewModel _viewModel;
+        public TableWindow(TableViewModel tableViewModel)
         {
             InitializeComponent();
-            this._viewModel = mainViewModel;
+            this._viewModel = tableViewModel;
             this.DataContext = _viewModel;
         }
 

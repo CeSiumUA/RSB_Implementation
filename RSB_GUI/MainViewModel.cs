@@ -51,7 +51,7 @@ namespace RSB_GUI
             set
             {
                 Settings.InputFilePath = value;
-                Histo(HistoFileSource.Input);
+                //Histo(HistoFileSource.Input);
                 this.OnPropertyChanged();
             }
         }
@@ -64,7 +64,7 @@ namespace RSB_GUI
             set
             {
                 Settings.OutputFilePath = value;
-                Histo(HistoFileSource.Output);
+                //Histo(HistoFileSource.Output);
                 this.OnPropertyChanged();
             }
         }

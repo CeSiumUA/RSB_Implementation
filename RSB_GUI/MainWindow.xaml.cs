@@ -28,6 +28,7 @@ namespace RSB_GUI
     {
         private MainViewModel mainViewModel;
         private const string settingsFileName = "settings";
+        private Settings settings;
         public MainWindow()
         {
             InitializeComponent();
@@ -76,6 +77,7 @@ namespace RSB_GUI
                     }
                 }
             }
+            this.settings = settings;
             this.mainViewModel = new MainViewModel(settings);
             this.DataContext = mainViewModel;
         }
@@ -91,16 +93,15 @@ namespace RSB_GUI
         }
         private void ShowHisto(MainViewModel.HistoFileSource histoFileSource)
         {
-            this.mainViewModel.Histo(histoFileSource);
-
-            var histoWindow = new GistoWindow(this.mainViewModel.HistogramPlotModel)
+            var filePath = histoFileSource == MainViewModel.HistoFileSource.Input ? this.mainViewModel.InputFile : this.mainViewModel.OutputFile;
+            var histoWindow = new GistoWindow(filePath, histoFileSource)
             {
                 Width = 1200,
                 Height = 850
             };
             histoWindow.Show();
-
-            var tableWindow = new TableWindow(this.mainViewModel)
+            
+            var tableWindow = new TableWindow(new TableViewModel(filePath, settings, histoFileSource))
             {
                 Width = 1200,
                 Height = 850
