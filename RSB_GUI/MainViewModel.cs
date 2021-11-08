@@ -444,7 +444,7 @@ namespace RSB_GUI
                 {
                     ItemsSource = pointsList,
                     ValueField = "Value",
-                    StrokeThickness = 1,
+                    StrokeThickness = 0.1,
                     FillColor = OxyColor.FromArgb(255, 255, 0, 0),
                     StrokeColor = OxyColor.FromArgb(255,255, 0, 0)
                 });

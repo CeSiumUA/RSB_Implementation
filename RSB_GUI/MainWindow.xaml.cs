@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RSB_GUI.Windows;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -91,9 +92,20 @@ namespace RSB_GUI
         private void ShowHisto(MainViewModel.HistoFileSource histoFileSource)
         {
             this.mainViewModel.Histo(histoFileSource);
-            this.MainTabControl.SelectedIndex = 1;
-            this.Width = 1200;
-            this.Height = 850;
+
+            var histoWindow = new GistoWindow(this.mainViewModel.HistogramPlotModel)
+            {
+                Width = 1200,
+                Height = 850
+            };
+            histoWindow.Show();
+
+            var tableWindow = new TableWindow(this.mainViewModel)
+            {
+                Width = 1200,
+                Height = 850
+            };
+            tableWindow.Show();
         }
 
         private void HistogramDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

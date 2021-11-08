@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Примітив ShiftRow" Height="356" Width="500" Loaded="Window_Loaded_1">
     <Grid>
-        <TabControl x:Name="MainTabControl">
+        <!--<TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">
-                <Grid>
+                <Grid>-->
                     <StackPanel Margin="10,10,10,10">
                         <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <WrapPanel>
@@ -45,14 +45,14 @@
                         </WrapPanel>
                     </StackPanel>
                     <!--<CheckBox Content="Використовувати спільний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>-->
-                </Grid>
-            </TabItem>
-            <TabItem Header="Гісто">
+                <!--</Grid>
+            </TabItem>-->
+            <!--<TabItem Header="Гісто">
                 <Grid>
                     <TabControl>
                         <TabItem Header="Гістограма">
                             <Grid>
-                                <oxy:PlotView Model="{Binding HistogramPlotModel}"/>
+                                --><!--<oxy:PlotView Model="{Binding HistogramPlotModel}"/>--><!--
                             </Grid>
                         </TabItem>
                         <TabItem Header="Таблиця">
@@ -76,7 +76,7 @@
                         </TabItem>
                     </TabControl>
                 </Grid>
-            </TabItem>
-        </TabControl>
+            </TabItem>-->
+        <!--</TabControl>-->
     </Grid>
 </Window>

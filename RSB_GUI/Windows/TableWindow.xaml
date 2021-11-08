@@ -1,0 +1,26 @@
+﻿<Window x:Class="RSB_GUI.Windows.TableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RSB_GUI.Windows"
+        mc:Ignorable="d"
+        Title="TableWindow" Height="450" Width="800">
+    <Grid>
+        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,258">
+            <Label Content="{Binding Enthrophy}"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="Bold"></Label>
+            <ComboBox HorizontalAlignment="Center" IsEditable="True"
+                                              Width="100" VerticalAlignment="Top"
+                                              ItemsSource="{Binding AvailableTableColumns}"
+                                              SelectedValue="{Binding TableColumnsCount}" />
+        </WrapPanel>
+        <DataGrid x:Name="HistogramDataGrid" CanUserAddRows="False" CanUserDeleteRows="False"
+                                          CanUserResizeRows="False" IsReadOnly="True"
+                                          AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}"
+                                          ColumnWidth="*" Margin="0,26,0,0" FontSize="12"
+                                          RowHeight="20" RowHeaderWidth="50" LoadingRow="HistogramDataGrid_LoadingRow">
+        </DataGrid>
+    </Grid>
+</Window>
