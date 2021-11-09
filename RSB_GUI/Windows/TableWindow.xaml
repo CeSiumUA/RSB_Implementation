@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI.Windows"
         mc:Ignorable="d"
-        Title="TableWindow" Height="450" Width="800">
+        Title="Таблиця" Width="1200" Height="850">
     <Grid>
         <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,258">
             <Label Content="{Binding Enthrophy}"
@@ -15,12 +15,17 @@
                                               Width="100" VerticalAlignment="Top"
                                               ItemsSource="{Binding AvailableTableColumns}"
                                               SelectedValue="{Binding TableColumnsCount}" />
+            <Menu HorizontalAlignment="Center" Height="23">
+                <MenuItem Header="Зберегти">
+                    <MenuItem x:Name="FileMenuItem" Header="Зберегти у файл" Click="FileMenuItem_Click"></MenuItem>
+                    <MenuItem x:Name="ClipboardMenuItem" Header="Зберегти у буфер обміну" Click="ClipboardMenuItem_Click"></MenuItem>
+                </MenuItem>
+            </Menu>
         </WrapPanel>
         <DataGrid x:Name="HistogramDataGrid" CanUserAddRows="False" CanUserDeleteRows="False"
                                           CanUserResizeRows="False" IsReadOnly="True"
                                           AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}"
                                           ColumnWidth="*" Margin="0,26,0,0" FontSize="12"
-                                          RowHeight="20" RowHeaderWidth="50" LoadingRow="HistogramDataGrid_LoadingRow">
-        </DataGrid>
+                                          RowHeight="20" RowHeaderWidth="50" LoadingRow="HistogramDataGrid_LoadingRow"/>
     </Grid>
 </Window>

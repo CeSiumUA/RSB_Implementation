@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI.Windows" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="GistoWindow" Height="450" Width="800">
+        Title="Гістограма" Height="450" Width="800">
     <Grid>
-        <oxy:PlotView x:Name="Plot" Model="{Binding HistogramPlotModel}"/>
+        <WrapPanel VerticalAlignment="Top" HorizontalAlignment="Center" Height="26">
+            <Menu HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+                <MenuItem Header="Зберегти">
+                    <MenuItem x:Name="FileMenuItem" Header="Зберегти у файл" Click="FileMenuItem_Click"></MenuItem>
+                    <MenuItem x:Name="ClipboardMenuItem" Header="Зберегти у буфер обміну" Click="ClipboardMenuItem_Click"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </WrapPanel>
+        <oxy:PlotView x:Name="Plot" Model="{Binding HistogramPlotModel}" Margin="0,26,0,0"/>
     </Grid>
 </Window>

@@ -12,11 +12,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static RSB_GUI.MainViewModel;
+using TickStyle = OxyPlot.Axes.TickStyle;
 
 namespace RSB_GUI.Windows
 {
@@ -40,6 +42,61 @@ namespace RSB_GUI.Windows
         {
             InitializeComponent();
             this.Plot.Model = CreatePlotModel(filePath, histoFileSource);
+        }
+        private void FileMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var screenShot = GenerateScreenshot();
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = "gisto.png";
+                saveFileDialog.Filter = "Image files (*.png)|*.png|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    PngBitmapEncoder encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(screenShot));
+                    using (var stream = File.Create(saveFileDialog.FileName))
+                    {
+                        encoder.Save(stream);
+                    }
+                    System.Windows.Forms.MessageBox.Show($"Файл збережено!{Environment.NewLine}Шлях: {saveFileDialog.FileName}", "OK!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Виникла помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ClipboardMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var screenShot = GenerateScreenshot();
+                System.Windows.Clipboard.SetImage(screenShot);
+                System.Windows.Forms.MessageBox.Show("Збережено у буфер обміну!", "OK!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString(), "Виникла помилка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private RenderTargetBitmap GenerateScreenshot()
+        {
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(this);
+            RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual drawingVisual = new DrawingVisual();
+
+            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+            {
+                VisualBrush brush = new VisualBrush(this);
+                drawingContext.DrawRectangle(brush, null, new Rect(new Point(), bounds.Size));
+            }
+
+            renderTarget.Render(this);
+            return renderTarget;
         }
         private PlotModel CreatePlotModel(string filePath, HistoFileSource histoFileSource = HistoFileSource.Input)
         {
@@ -129,5 +186,6 @@ namespace RSB_GUI.Windows
             };
         }
         private Histogram _histogram = new Histogram();
+
     }
 }

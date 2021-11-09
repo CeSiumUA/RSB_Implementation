@@ -100,7 +100,7 @@ namespace RSB_GUI
                 Height = 850
             };
             histoWindow.Show();
-            
+
             var tableWindow = new TableWindow(new TableViewModel(filePath, settings, histoFileSource))
             {
                 Width = 1200,
