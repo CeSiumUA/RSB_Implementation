@@ -62,28 +62,33 @@ namespace RSB_GUI
                     byte[] blockBytes = new byte[bytesBlockCount];
 
                     Array.Copy(bytes, x * bytesBlockCount, blockBytes, 0, bytesBlockCount);
-
                     BitArray bitArray = new BitArray(blockBytes);
 
-                    for (int i = 0; i < shiftValue; i++)
+                    for (int i = 0; i < shiftValue % bitArray.Count; i++)
                     {
                         var temp = bitArray[bitArray.Length - 1];
                         for (int j = bitArray.Length - 1; j > 0; j--)
                         {
                             bitArray[j] = bitArray[j - 1];
+                            if (cancellationToken.IsCancellationRequested) return;
                         }
                         bitArray[0] = temp;
                     }
-
                     bitArray.CopyTo(blockBytes, 0);
-
+                    if (cancellationToken.IsCancellationRequested) return;
                     Array.Copy(blockBytes, 0, encryptedBytes, x * bytesBlockCount, blockBytes.Length);
 
                     Step++;
                 });
+                if (cancellationToken.IsCancellationRequested) return;
                 shiftingTask.Start();
                 tasks.Add(shiftingTask);
             });
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tasks.Clear();
+                return encryptedBytes;
+            }
             Task.WaitAll(tasks.ToArray());
             TotalSteps = Step;
             return encryptedBytes.ToArray();
@@ -105,23 +110,21 @@ namespace RSB_GUI
                     byte[] blockBytes = new byte[bytesBlockCount];
 
                     Array.Copy(encryptedBytes, x * bytesBlockCount, blockBytes, 0, bytesBlockCount);
-
                     BitArray bitArray = new BitArray(blockBytes);
 
-                    for (int i = 0; i < shiftValue; i++)
+                    for (int i = 0; i < shiftValue % bitArray.Count; i++)
                     {
                         var temp = bitArray[0];
 
                         for (int j = 0; j < bitArray.Length - 1; j++)
                         {
                             bitArray[j] = bitArray[j + 1];
+                            if (cancellationToken.IsCancellationRequested) return;
                         }
-
                         bitArray[bitArray.Length - 1] = temp;
                     }
-
                     bitArray.CopyTo(blockBytes, 0);
-
+                    if (cancellationToken.IsCancellationRequested) return;
                     Array.Copy(blockBytes, 0, decryptedBytes, x * bytesBlockCount, blockBytes.Length);
 
                     Step++;
@@ -129,6 +132,11 @@ namespace RSB_GUI
                 shiftingTask.Start();
                 tasks.Add(shiftingTask);
             });
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tasks.Clear();
+                return encryptedBytes;
+            }
             Task.WaitAll(tasks.ToArray());
             TotalSteps = Step;
             return decryptedBytes;
