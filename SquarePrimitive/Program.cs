@@ -11,10 +11,10 @@ byte[] filledArray = new byte[fileBytes.Length + bytesToAdd];
 Array.Copy(fileBytes, 0, filledArray, 0, fileBytes.Length);
 
 #region Encryption
-for(int i = 0; i < filledArray.Length; i+= blockSizeBytes)
+for(int r = 0; r < filledArray.Length; r+= blockSizeBytes)
 {
     var linedSquare = new byte[blockSizeBytes];
-    Array.Copy(filledArray, i, linedSquare, 0, blockSizeBytes);
+    Array.Copy(filledArray, r, linedSquare, 0, blockSizeBytes);
     var edgeLength = (int)Math.Sqrt(linedSquare.Length);
     byte[,] square = new byte[edgeLength, edgeLength];
     for(int a = 0; a < edgeLength; a++)
@@ -22,6 +22,21 @@ for(int i = 0; i < filledArray.Length; i+= blockSizeBytes)
         for (int b = 0; b < edgeLength; b++)
         {
             square[a, b] = linedSquare[a * edgeLength + b];
+        }
+    }
+
+    for(int i = 0; i < edgeLength; i++)
+    {
+        byte sum = 0;
+        for(int j = 0; j < edgeLength; j++)
+        {
+            sum += square[i, j];
+        }
+        square[i, i] = sum;
+        for(int j = 0; j < edgeLength; j++)
+        {
+            if (j == i) continue;
+            square[j, i] = (byte)((square[j, i] + square[i, i]) % 256);
         }
     }
 }
