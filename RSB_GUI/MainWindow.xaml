@@ -29,8 +29,6 @@
                             <!--<Label Content="{Binding BlockLength}" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
                             <ComboBox HorizontalAlignment="Left" IsEditable="True" Width="100" VerticalAlignment="Top" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" />
                         </WrapPanel>
-                        <Label Content="Параметр зсуву:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=ShiftValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" BorderThickness="0,0,0,1"/>
                         <WrapPanel>
                             <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,0"/>
                             <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"/>

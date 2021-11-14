@@ -110,12 +110,7 @@ namespace RSB_GUI
         {
             get
             {
-                var list = new List<double>();
-                for(int x = 3; x <= 9; x++)
-                {
-                    list.Add(Math.Pow(2, x));
-                }
-                return list.Select(x => (int)x).ToArray();
+                return new int[] { 128 };
             }
         }
         public int ShiftValue
@@ -308,7 +303,7 @@ namespace RSB_GUI
             stopWatch.Restart();
             this.IsEncryptionRunning = true;
             this._cancellationTokenSource = new CancellationTokenSource();
-            encryptor = new RSBEcnryptor(this.LogorithmicalBlockLength, this.ShiftValue, () =>
+            encryptor = new SquareEncryption(this.LogorithmicalBlockLength, () =>
             {
                 this.ElapsedTime = stopWatch.Elapsed;
                 this.OnPropertyChanged();
@@ -323,11 +318,11 @@ namespace RSB_GUI
                     var smallFileBytes = (fileBytes as SmallFileBytes).Bytes;
                     if (UseEncryption)
                     {
-                        processedBytes = await encryptor.EncryptBytes(smallFileBytes, _cancellationTokenSource.Token);
+                        processedBytes = encryptor.Encrypt(smallFileBytes, _cancellationTokenSource.Token);
                     }
                     else
                     {
-                        processedBytes = await encryptor.DecryptBytes(smallFileBytes, _cancellationTokenSource.Token);
+                        processedBytes = encryptor.Decrypt(smallFileBytes, _cancellationTokenSource.Token);
                     }
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
@@ -346,11 +341,11 @@ namespace RSB_GUI
                             byte[] processedBytes = null;
                             if (UseEncryption)
                             {
-                                processedBytes = await encryptor.EncryptBytes(bytes, _cancellationTokenSource.Token);
+                                processedBytes = encryptor.Encrypt(bytes, _cancellationTokenSource.Token);
                             }
                             else
                             {
-                                processedBytes = await encryptor.DecryptBytes(bytes, _cancellationTokenSource.Token);
+                                processedBytes = encryptor.Decrypt(bytes, _cancellationTokenSource.Token);
                             }
                             if (_cancellationTokenSource.IsCancellationRequested)
                             {
@@ -453,7 +448,7 @@ namespace RSB_GUI
 
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isEncryptionRunning = false;
-        RSBEcnryptor encryptor = null;
+        SquareEncryption encryptor = null;
         private TimeSpan _elapsedTime;
         private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
