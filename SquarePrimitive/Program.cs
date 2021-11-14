@@ -1,45 +1,34 @@
-﻿var fileBytes = await File.ReadAllBytesAsync(@"C:\Users\mtgin\Downloads\NIST_UI_final.rar");
+﻿using SquarePrimitive;
+
+
 const int blockSize = 128;
 
 if (blockSize != 128) throw new NotImplementedException("Only 128 bit is supported yet :(");
 
-var blockSizeBytes = 128 / 8;
-
-var remnantBytes = fileBytes.Length % blockSizeBytes;
-var bytesToAdd = remnantBytes == 0 ? remnantBytes : blockSizeBytes - remnantBytes;
-byte[] filledArray = new byte[fileBytes.Length + bytesToAdd];
-Array.Copy(fileBytes, 0, filledArray, 0, fileBytes.Length);
+QuadEncryptor quadEncryptor = new QuadEncryptor(blockSize);
 
 #region Encryption
-for(int r = 0; r < filledArray.Length; r+= blockSizeBytes)
-{
-    var linedSquare = new byte[blockSizeBytes];
-    Array.Copy(filledArray, r, linedSquare, 0, blockSizeBytes);
-    var edgeLength = (int)Math.Sqrt(linedSquare.Length);
-    byte[,] square = new byte[edgeLength, edgeLength];
-    for(int a = 0; a < edgeLength; a++)
-    {
-        for (int b = 0; b < edgeLength; b++)
-        {
-            square[a, b] = linedSquare[a * edgeLength + b];
-        }
-    }
+var rawFileBytes = await File.ReadAllBytesAsync(@"C:\Users\mtgin\Downloads\NIST_UI_final.rar");
+var encryptedArray = quadEncryptor.Encrypt(rawFileBytes);
+await File.WriteAllBytesAsync("result.encr", encryptedArray);
+Console.WriteLine("Encrypted successfully!");
+#endregion
 
-    for(int i = 0; i < edgeLength; i++)
+#region Decryption
+var encryptedFileBytes = await File.ReadAllBytesAsync("result.encr");
+var decryptedArray = quadEncryptor.Decrypt(encryptedFileBytes);
+await File.WriteAllBytesAsync("result1.rar", decryptedArray);
+Console.WriteLine("Decrypted successfully!");
+#endregion
+
+#region CompareArrays
+for (int i = 0; i < rawFileBytes.Length; i++)
+{
+    if (rawFileBytes[i] != decryptedArray[i])
     {
-        byte sum = 0;
-        for(int j = 0; j < edgeLength; j++)
-        {
-            sum += square[i, j];
-        }
-        square[i, i] = sum;
-        for(int j = 0; j < edgeLength; j++)
-        {
-            if (j == i) continue;
-            square[j, i] = (byte)((square[j, i] + square[i, i]) % 256);
-        }
+        Console.WriteLine($"Not Equal on {i}, source: {rawFileBytes[i]}, decrypted: {decryptedArray[i]}");
     }
 }
 #endregion
-
+Console.WriteLine("Check completed");
 Console.ReadLine();
