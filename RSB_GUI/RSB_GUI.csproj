@@ -6,6 +6,9 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>AnyCPU;x64</Platforms>
+    <PackageId>PrimSquare</PackageId>
+    <Product>PrimSquare</Product>
+    <AssemblyName>PrimSquare</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

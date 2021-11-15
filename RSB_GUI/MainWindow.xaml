@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив ShiftRow" Height="356" Width="500" Loaded="Window_Loaded_1">
+        Title="Примітив PrimSquare" Height="277" Width="500" Loaded="Window_Loaded_1">
     <Grid>
         <!--<TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">

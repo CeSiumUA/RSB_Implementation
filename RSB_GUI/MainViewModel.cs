@@ -158,7 +158,7 @@ namespace RSB_GUI
         {
             get
             {
-                return !string.IsNullOrEmpty(this.InputFile) && !string.IsNullOrEmpty(this.OutputFile) && File.Exists(this.InputFile) && this.ShiftValue != 0;
+                return !string.IsNullOrEmpty(this.InputFile) && !string.IsNullOrEmpty(this.OutputFile) && File.Exists(this.InputFile);
             }
         }
 
