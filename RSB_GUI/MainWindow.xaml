@@ -5,24 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив PrimSquare" Height="277" Width="500" Loaded="Window_Loaded_1">
+        Title="Примітив PrimSquare" Height="318" Width="500" Loaded="Window_Loaded_1">
     <Grid>
         <!--<TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">
                 <Grid>-->
                     <StackPanel Margin="10,10,10,10">
                         <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <WrapPanel>
-                            <TextBox HorizontalAlignment="Center" Text="{Binding InputFile}"  TextWrapping="NoWrap" Width="366" VerticalAlignment="Top"/>
-                            <Button x:Name="SelectInputFileButton" Content="..."  HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
-                            <Button x:Name="InputFileGisto" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
-                        </WrapPanel>
+                        <DockPanel LastChildFill="True">
+                            <Button x:Name="InputFileGisto" DockPanel.Dock="Right" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
+                            <Button x:Name="SelectInputFileButton" DockPanel.Dock="Right" Content="..."  HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
+                            <TextBox Text="{Binding InputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+                        </DockPanel>
                         <Label Content="Вихідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <WrapPanel>
-                            <TextBox HorizontalAlignment="Center" Text="{Binding OutputFile}" TextWrapping="NoWrap" Width="366" VerticalAlignment="Top"/>
-                            <Button x:Name="SelectOutputFileButton" Content="..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
-                            <Button x:Name="OutputFileGisto" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
-                        </WrapPanel>
+                        <DockPanel LastChildFill="True">
+                            <Button x:Name="OutputFileGisto" DockPanel.Dock="Right" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
+                            <Button x:Name="SelectOutputFileButton" DockPanel.Dock="Right" Content="..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
+                            <TextBox Text="{Binding OutputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+                        </DockPanel>
                         <Label Content="Розмір блоку:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <WrapPanel>
                             <!--<Slider HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Maximum="3" Orientation="Horizontal" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>-->
