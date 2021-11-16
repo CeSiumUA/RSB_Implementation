@@ -28,6 +28,8 @@
                             <!--<Slider HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Maximum="3" Orientation="Horizontal" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>-->
                             <!--<Label Content="{Binding BlockLength}" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
                             <ComboBox HorizontalAlignment="Left" IsEditable="True" Width="100" VerticalAlignment="Top" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" />
+                            <RadioButton Margin="15,0,0,0" IsChecked="{Binding UseMainDiagonal}" Content="Головна діагональ" Visibility="{Binding AllowDiagonalModeSelection}"></RadioButton>
+                            <RadioButton Margin="15,0,0,0" IsChecked="{Binding UseBlockSplit}" Content="Розбивка" Visibility="{Binding AllowDiagonalModeSelection}"></RadioButton>
                         </WrapPanel>
                         <WrapPanel>
                             <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,0"/>

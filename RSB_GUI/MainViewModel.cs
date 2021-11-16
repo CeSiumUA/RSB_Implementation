@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -104,13 +105,46 @@ namespace RSB_GUI
             set
             {
                 Settings.LogBlockLength = value;
+                this.OnPropertyChanged("LogorithmicalBlockLength");
+                this.OnPropertyChanged("AllowDiagonalModeSelection");
             }
         }
         public int[] BlockLengthValues
         {
             get
             {
-                return new int[] { 128 };
+                return new int[] { 128, 256, 512 };
+            }
+        }
+        public Visibility AllowDiagonalModeSelection
+        {
+            get
+            {
+                bool isVisible = LogorithmicalBlockLength >= 512 && (Math.Sqrt(LogorithmicalBlockLength / 8) % 1 == 0);
+                return isVisible ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+        public bool UseMainDiagonal
+        {
+            get
+            {
+                return Settings.UseMainDiagonal;
+            }
+            set
+            {
+                this.Settings.UseMainDiagonal = value;
+                this.OnPropertyChanged();
+            }
+        }
+        public bool UseBlockSplit
+        {
+            get
+            {
+                return !UseMainDiagonal;
+            }
+            set
+            {
+                UseMainDiagonal = !value;
             }
         }
         public int ShiftValue
@@ -307,7 +341,7 @@ namespace RSB_GUI
             {
                 this.ElapsedTime = stopWatch.Elapsed;
                 this.OnPropertyChanged();
-            });
+            }, useMainDiagonal: UseMainDiagonal);
             new Task(async () =>
             {
                 var fileBytes = ReadFileBytes(this.InputFile);
