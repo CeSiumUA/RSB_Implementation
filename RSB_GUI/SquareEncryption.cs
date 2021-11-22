@@ -71,7 +71,6 @@ namespace RSB_GUI
             {
                 data = FillRemnantBytes(data);
             }
-            TotalSteps = data.Length / _blockSizeBytes;
             int blocksSplittingProgress = 0;
             for (int r = 0; r < data.Length; r += _blockSizeBytes)
             {
@@ -203,7 +202,6 @@ namespace RSB_GUI
                     }
                 }
                 Array.Copy(linedSquare, 0, data, r, _blockSizeBytes);
-                Step++;
             }
             return data;
         }
@@ -214,7 +212,6 @@ namespace RSB_GUI
                 data = FillRemnantBytes(data);
             }
             int blocksSplittingProgress = 0;
-            TotalSteps = data.Length / _blockSizeBytes;
             Step = 0;
             for (int r = 0; r < data.Length; r += _blockSizeBytes)
             {
@@ -349,7 +346,6 @@ namespace RSB_GUI
                     }
                 }
                 Array.Copy(linedSquare, 0, data, r, _blockSizeBytes);
-                Step++;
             }
             return data;
         }

@@ -384,20 +384,24 @@ namespace RSB_GUI
                 
                 if (fileBytes is SmallFileBytes)
                 {
-                    byte[] processedBytes = null;
-                    var smallFileBytes = (fileBytes as SmallFileBytes).Bytes;
-                    if (UseEncryption)
+                    byte[] processedBytes = (fileBytes as SmallFileBytes).Bytes;
+                    encryptor.TotalSteps = SelectedRoundValues;
+                    for (int pb = 0; pb < SelectedRoundValues; pb++)
                     {
-                        processedBytes = encryptor.Encrypt(smallFileBytes, _cancellationTokenSource.Token);
-                    }
-                    else
-                    {
-                        processedBytes = encryptor.Decrypt(smallFileBytes, _cancellationTokenSource.Token);
-                    }
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        this.IsEncryptionRunning = false;
-                        return;
+                        if (UseEncryption)
+                        {
+                            processedBytes = encryptor.Encrypt(processedBytes, _cancellationTokenSource.Token);
+                        }
+                        else
+                        {
+                            processedBytes = encryptor.Decrypt(processedBytes, _cancellationTokenSource.Token);
+                        }
+                        if (_cancellationTokenSource.IsCancellationRequested)
+                        {
+                            this.IsEncryptionRunning = false;
+                            return;
+                        }
+                        encryptor.Step = pb + 1;
                     }
                     File.WriteAllBytes(this.OutputFile, processedBytes);
                 }
