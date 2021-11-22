@@ -23,14 +23,35 @@
                             <Button x:Name="SelectOutputFileButton" DockPanel.Dock="Right" Content="..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
                             <TextBox Text="{Binding OutputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
                         </DockPanel>
-                        <Label Content="Розмір блоку:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <WrapPanel>
-                            <ComboBox HorizontalAlignment="Left" IsEditable="True" Width="100" VerticalAlignment="Top" ItemsSource="{Binding RoundValues}" SelectedValue="{Binding SelectedRoundValues}" />
-                            <ComboBox HorizontalAlignment="Left" IsEditable="True" Width="100" VerticalAlignment="Top" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" />
-                            <RadioButton Content="1" IsChecked="{Binding UseVariant1}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,20,0"></RadioButton>
-                            <RadioButton Content="2" IsChecked="{Binding UseVariant2}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,20,0"></RadioButton>
-                            <RadioButton Content="4" IsChecked="{Binding UseVariant4}" HorizontalAlignment="Left" VerticalAlignment="Top"></RadioButton>
-                        </WrapPanel>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Число раундів:" Grid.Column="0" Grid.Row="0"></Label>
+                <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" Margin="0,0,20,0" />
+                <Label Content="Розмір блоку:" Grid.Column="1" Grid.Row="0" />
+                <ComboBox Grid.Row="1" IsEditable="True" Grid.Column="1" ItemsSource="{Binding RoundValues}" SelectedValue="{Binding SelectedRoundValues}" Margin="0,0,20,0" />
+                <Grid Grid.Row="1" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <RadioButton Grid.Row="0" Grid.Column="0" Content="1" IsChecked="{Binding UseVariant1}"></RadioButton>
+                    <RadioButton Grid.Row="0" Grid.Column="1" Content="2" IsChecked="{Binding UseVariant2}"></RadioButton>
+                    <RadioButton Grid.Row="0" Grid.Column="2" Content="4" IsChecked="{Binding UseVariant4}"></RadioButton>
+                </Grid>
+            </Grid>
                         <WrapPanel>
                             <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,0"/>
                             <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"/>
