@@ -49,7 +49,7 @@
                     </Grid.RowDefinitions>
                     <RadioButton Grid.Row="0" Grid.Column="0" Content="1" IsChecked="{Binding UseVariant1}"></RadioButton>
                     <RadioButton Grid.Row="0" Grid.Column="1" Content="2" IsChecked="{Binding UseVariant2}"></RadioButton>
-                    <RadioButton Grid.Row="0" Grid.Column="2" Content="4" IsChecked="{Binding UseVariant4}"></RadioButton>
+                    <RadioButton Grid.Row="0" Grid.Column="2" Content="4" IsChecked="{Binding UseVariant3}"></RadioButton>
                 </Grid>
             </Grid>
                         <WrapPanel>
