@@ -25,11 +25,11 @@
                         </DockPanel>
                         <Label Content="Розмір блоку:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <WrapPanel>
-                            <!--<Slider HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Maximum="3" Orientation="Horizontal" IsSnapToTickEnabled="True" Value="{Binding BlockPower}"/>-->
-                            <!--<Label Content="{Binding BlockLength}" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
+                            <ComboBox HorizontalAlignment="Left" IsEditable="True" Width="100" VerticalAlignment="Top" ItemsSource="{Binding RoundValues}" SelectedValue="{Binding SelectedRoundValues}" />
                             <ComboBox HorizontalAlignment="Left" IsEditable="True" Width="100" VerticalAlignment="Top" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" />
-                            <RadioButton Margin="15,0,0,0" IsChecked="{Binding UseMainDiagonal}" Content="Головна діагональ" Visibility="{Binding AllowDiagonalModeSelection}"></RadioButton>
-                            <RadioButton Margin="15,0,0,0" IsChecked="{Binding UseBlockSplit}" Content="Розбивка" Visibility="{Binding AllowDiagonalModeSelection}"></RadioButton>
+                            <RadioButton Content="1" IsChecked="{Binding UseVariant1}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,20,0"></RadioButton>
+                            <RadioButton Content="2" IsChecked="{Binding UseVariant2}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,20,0"></RadioButton>
+                            <RadioButton Content="4" IsChecked="{Binding UseVariant4}" HorizontalAlignment="Left" VerticalAlignment="Top"></RadioButton>
                         </WrapPanel>
                         <WrapPanel>
                             <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,0"/>

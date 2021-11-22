@@ -18,6 +18,9 @@ namespace RSB_GUI
         public byte[] CommonKey { get; set; }
         public bool UseEncryption { get; set; } = true;
         public int TableColumnsCount { get; set; } = 8;
-        public bool UseMainDiagonal { get; set; } = false;
+        public bool UseVariant1 { get; set;} = true;
+        public bool UseVariant2 { get; set;} = false;
+        public bool UseVariant3 { get; set;} = false;
+        public int SelectedRoundValues { get; set; } = 1;
     }
 }

@@ -116,6 +116,29 @@ namespace RSB_GUI
                 return new int[] { 128, 256, 512 };
             }
         }
+        public int[] RoundValues
+        {
+            get
+            {
+                int[] values = new int[16];
+                for(int i = 1; i <= 16; i++)
+                {
+                    values[i - 1] = i;
+                }
+                return values;
+            }
+        }
+        public int SelectedRoundValues
+        {
+            get
+            {
+                return Settings.SelectedRoundValues;
+            }
+            set
+            {
+                Settings.SelectedRoundValues = value;
+            }
+        }
         public Visibility AllowDiagonalModeSelection
         {
             get
@@ -124,27 +147,40 @@ namespace RSB_GUI
                 return isVisible ? Visibility.Visible : Visibility.Hidden;
             }
         }
-        public bool UseMainDiagonal
+        public bool UseVariant1
         {
             get
             {
-                return Settings.UseMainDiagonal;
+                return Settings.UseVariant1;
             }
-            set
-            {
-                this.Settings.UseMainDiagonal = value;
+            set 
+            { 
+                Settings.UseVariant1 = value;
                 this.OnPropertyChanged();
             }
         }
-        public bool UseBlockSplit
+        public bool UseVariant2
         {
             get
             {
-                return !UseMainDiagonal;
+                return Settings.UseVariant2;
             }
             set
             {
-                UseMainDiagonal = !value;
+                Settings.UseVariant2 = value;
+                this.OnPropertyChanged();
+            }
+        }
+        public bool UseVariant3
+        {
+            get
+            {
+                return Settings.UseVariant3;
+            }
+            set
+            {
+                Settings.UseVariant3 = value;
+                this.OnPropertyChanged();
             }
         }
         public int ShiftValue
@@ -337,11 +373,11 @@ namespace RSB_GUI
             stopWatch.Restart();
             this.IsEncryptionRunning = true;
             this._cancellationTokenSource = new CancellationTokenSource();
-            encryptor = new SquareEncryption(this.LogorithmicalBlockLength, () =>
+            encryptor = new SquareEncryption(this.LogorithmicalBlockLength, GetCurrentVariant(), () =>
             {
                 this.ElapsedTime = stopWatch.Elapsed;
                 this.OnPropertyChanged();
-            }, useMainDiagonal: UseMainDiagonal);
+            });
             new Task(async () =>
             {
                 var fileBytes = ReadFileBytes(this.InputFile);
@@ -525,5 +561,18 @@ namespace RSB_GUI
                 Bytes = File.ReadAllBytes(path)
             };
         }
+        private BlockSizeVariant GetCurrentVariant()
+        {
+            if(UseVariant1) return BlockSizeVariant.Variant1;
+            if(UseVariant2) return BlockSizeVariant.Variant2;
+            if(UseVariant3) return BlockSizeVariant.Variant3;
+            return BlockSizeVariant.Variant1;
+        }
+    }
+    public enum BlockSizeVariant : short
+    {
+        Variant1 = 0,
+        Variant2 = 1,
+        Variant3 = 2,
     }
 }
