@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -61,6 +62,10 @@ namespace RSB_GUI
             {
                 binaryFormatter.Serialize(fs, settings);
             }
+            if (File.Exists("Comment.docx"))
+            {
+                File.Delete("Comment.docx");
+            }
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
@@ -118,6 +123,26 @@ namespace RSB_GUI
             }
             e.Row.Header = (e.Row.GetIndex() * this.mainViewModel.TableColumnsCount);
             e.Row.HorizontalContentAlignment = HorizontalAlignment.Center;
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var documentWindow = new CommentDocument();
+                documentWindow.Show();
+            }
+            catch(Exception ex)
+            {
+                var docxName = "Comment.docx";
+                var docxBytes = RSB_GUI.Properties.Resources.Comment1;
+                File.WriteAllBytes(docxName, docxBytes);
+                using (Process process = new Process())
+                {
+                    process.StartInfo.FileName = docxName;
+                    process.Start();
+                }
+            }
         }
     }
 }

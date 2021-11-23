@@ -5,24 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив PrimSquare" Height="318" Width="500" Loaded="Window_Loaded_1">
+        Title="Примітив PrimSquare" Height="340" Width="500" Loaded="Window_Loaded_1">
     <Grid>
         <!--<TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">
                 <Grid>-->
-                    <StackPanel Margin="10,10,10,10">
-                        <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <DockPanel LastChildFill="True">
-                            <Button x:Name="InputFileGisto" DockPanel.Dock="Right" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
-                            <Button x:Name="SelectInputFileButton" DockPanel.Dock="Right" Content="..."  HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
-                            <TextBox Text="{Binding InputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
-                        </DockPanel>
-                        <Label Content="Вихідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <DockPanel LastChildFill="True">
-                            <Button x:Name="OutputFileGisto" DockPanel.Dock="Right" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
-                            <Button x:Name="SelectOutputFileButton" DockPanel.Dock="Right" Content="..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
-                            <TextBox Text="{Binding OutputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
-                        </DockPanel>
+        <StackPanel Margin="10,10,10,10">
+            <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <DockPanel LastChildFill="True">
+                <Button x:Name="InputFileGisto" DockPanel.Dock="Right" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="InputFileGisto_Click"/>
+                <Button x:Name="SelectInputFileButton" DockPanel.Dock="Right" Content="..."  HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectInputFileButton_Click"/>
+                <TextBox Text="{Binding InputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+            </DockPanel>
+            <Label Content="Вихідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <DockPanel LastChildFill="True">
+                <Button x:Name="OutputFileGisto" DockPanel.Dock="Right" Content="Гісто" HorizontalAlignment="Right" VerticalAlignment="Top" Width="36" Height="18" Click="OutputFileGisto_Click"/>
+                <Button x:Name="SelectOutputFileButton" DockPanel.Dock="Right" Content="..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Click="SelectOutputFileButton_Click"/>
+                <TextBox Text="{Binding OutputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
+            </DockPanel>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -52,28 +52,40 @@
                     <RadioButton Grid.Row="0" Grid.Column="2" Content="4" IsChecked="{Binding UseVariant3}"></RadioButton>
                 </Grid>
             </Grid>
-                        <WrapPanel>
-                            <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,15"/>
-                            <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,15"/>
-                        </WrapPanel>
-                        <WrapPanel>
-                            <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/>
-                            <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
-                        </WrapPanel>
-                        <WrapPanel Margin="0,5,0,0">
-                            <ProgressBar Minimum="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}" Width="256" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding ElapsedTime}" HorizontalAlignment="Right"/>
-                        </WrapPanel>
-                    </StackPanel>
-                    <!--<CheckBox Content="Використовувати спільний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>-->
-                <!--</Grid>
+            <WrapPanel>
+                <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,15"/>
+                <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,15"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/>
+                <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
+            </WrapPanel>
+            <Grid Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="130"></ColumnDefinition>
+                    <ColumnDefinition Width="60"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <ProgressBar Minimum="0" Grid.Row="0" Grid.Column="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}"/>
+                <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1"/>
+                <Button Content="Comment" Grid.Column="2" Grid.Row="0" Click="Button_Click_2"></Button>
+            </Grid>
+            
+        </StackPanel>
+        <!--<CheckBox Content="Використовувати спільний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>-->
+        <!--</Grid>
             </TabItem>-->
-            <!--<TabItem Header="Гісто">
+        <!--<TabItem Header="Гісто">
                 <Grid>
                     <TabControl>
                         <TabItem Header="Гістограма">
                             <Grid>
-                                --><!--<oxy:PlotView Model="{Binding HistogramPlotModel}"/>--><!--
+                                -->
+        <!--<oxy:PlotView Model="{Binding HistogramPlotModel}"/>-->
+        <!--
                             </Grid>
                         </TabItem>
                         <TabItem Header="Таблиця">
@@ -99,5 +111,6 @@
                 </Grid>
             </TabItem>-->
         <!--</TabControl>-->
+        
     </Grid>
 </Window>
