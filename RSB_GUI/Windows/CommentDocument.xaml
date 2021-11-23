@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI.Windows"
         mc:Ignorable="d"
-        Title="Документ" Height="900" Width="900">
+        Title="Документ" Height="900" Width="900" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <DocumentViewer x:Name="CommentDocumentViewer"/>
     </Grid>

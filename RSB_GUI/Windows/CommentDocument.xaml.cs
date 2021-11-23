@@ -22,37 +22,30 @@ namespace RSB_GUI.Windows
     /// </summary>
     public partial class CommentDocument : Window
     {
-        public CommentDocument()
+        private string _tempFilePath = null;
+        public CommentDocument(string tempFilePath = null)
         {
             InitializeComponent();
+            _tempFilePath = tempFilePath;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             var commentFile = RSB_GUI.Properties.Resources.Comment;
 
-            Uri packageUri;
-            XpsDocument xpsDocument = null;
-
-            using (MemoryStream xpsStream = new MemoryStream(commentFile))
+            if (string.IsNullOrEmpty(_tempFilePath))
             {
-                using (Package package = Package.Open(xpsStream))
-                {
-                    packageUri = new Uri("memorystream://Comment.xps");
-
-                    try
-                    {
-                        PackageStore.AddPackage(packageUri, package);
-                        xpsDocument = new XpsDocument(package, CompressionOption.Maximum, packageUri.AbsoluteUri);
-
-                        CommentDocumentViewer.Document = xpsDocument.GetFixedDocumentSequence();
-                    }
-                    finally
-                    {
-                        if (xpsDocument != null)
-                        {
-                            xpsDocument.Close();
-                        }
-                        PackageStore.RemovePackage(packageUri);
-                    }
-                }
+                _tempFilePath = System.IO.Path.GetTempFileName();
             }
+
+            File.WriteAllBytes(_tempFilePath, commentFile);
+
+            CommentDocumentViewer.Document = (new XpsDocument(_tempFilePath, FileAccess.Read)).GetFixedDocumentSequence();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }

@@ -30,6 +30,7 @@ namespace RSB_GUI
         private MainViewModel mainViewModel;
         private const string settingsFileName = "settings";
         private Settings settings;
+        private List<string> _removeableFiles = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -62,9 +63,16 @@ namespace RSB_GUI
             {
                 binaryFormatter.Serialize(fs, settings);
             }
-            if (File.Exists("Comment.docx"))
+            foreach(var file in _removeableFiles)
             {
-                File.Delete("Comment.docx");
+                if (File.Exists(file))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
             }
         }
 
@@ -127,14 +135,17 @@ namespace RSB_GUI
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            var xpsTempFilePath = System.IO.Path.GetTempFileName();
+            _removeableFiles.Add(xpsTempFilePath);
             try
             {
-                var documentWindow = new CommentDocument();
+                var documentWindow = new CommentDocument(xpsTempFilePath);
                 documentWindow.Show();
             }
             catch(Exception ex)
             {
                 var docxName = "Comment.docx";
+                _removeableFiles.Add(docxName);
                 var docxBytes = RSB_GUI.Properties.Resources.Comment1;
                 File.WriteAllBytes(docxName, docxBytes);
                 using (Process process = new Process())
