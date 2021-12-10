@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSB_GUI", "RSB_GUI\RSB_GUI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SquarePrimitive", "SquarePrimitive\SquarePrimitive.csproj", "{3AD19D29-7994-4E4C-A53F-F265AA7B879A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlideCoder", "SlideCoder\SlideCoder.csproj", "{06624776-9F7B-4706-A374-399F0B0554BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlideCoder", "SlideCoder\SlideCoder.csproj", "{06624776-9F7B-4706-A374-399F0B0554BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSB.Core", "RSB.Core\RSB.Core.csproj", "{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{06624776-9F7B-4706-A374-399F0B0554BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06624776-9F7B-4706-A374-399F0B0554BB}.Release|x64.ActiveCfg = Release|Any CPU
 		{06624776-9F7B-4706-A374-399F0B0554BB}.Release|x64.Build.0 = Release|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Debug|x64.Build.0 = Debug|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Release|x64.ActiveCfg = Release|Any CPU
+		{3278A334-7796-4CEE-BA28-E7EBA1A06BD2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
