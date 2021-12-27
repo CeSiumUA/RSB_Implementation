@@ -11,4 +11,10 @@
     <ProjectReference Include="..\RSB.Core\RSB.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="sample.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
