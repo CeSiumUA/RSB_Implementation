@@ -135,25 +135,7 @@ namespace RSB_GUI
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            var xpsTempFilePath = System.IO.Path.GetTempFileName();
-            _removeableFiles.Add(xpsTempFilePath);
-            try
-            {
-                var documentWindow = new CommentDocument(xpsTempFilePath);
-                documentWindow.Show();
-            }
-            catch(Exception ex)
-            {
-                var docxName = "Comment.docx";
-                _removeableFiles.Add(docxName);
-                var docxBytes = RSB_GUI.Properties.Resources.Comment1;
-                File.WriteAllBytes(docxName, docxBytes);
-                using (Process process = new Process())
-                {
-                    process.StartInfo.FileName = docxName;
-                    process.Start();
-                }
-            }
+            
         }
     }
 }

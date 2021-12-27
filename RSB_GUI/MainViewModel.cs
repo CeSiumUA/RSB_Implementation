@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using RSB_GUI.Encryptors;
 using RSB_GUI.Utils;
 using TickStyle = OxyPlot.Axes.TickStyle;
 
@@ -113,7 +114,7 @@ namespace RSB_GUI
         {
             get
             {
-                return new int[] { 128, 256, 512 };
+                return new int[] { 128, 192, 256 };
             }
         }
         public int[] RoundValues
@@ -284,6 +285,48 @@ namespace RSB_GUI
             }
         }
 
+        public int KeyLength
+        {
+            get
+            {
+                return Key.Length * 8;
+            }
+        }
+
+        public int[] KeyLengthOptions
+        {
+            get
+            {
+                return new int[] {128, 192, 256};
+            }
+        }
+
+        public int CommonKeyLength
+        {
+            get
+            {
+                return Settings.CommonKeyLength;
+            }
+            set
+            {
+                Settings.CommonKeyLength = value;
+                this.OnPropertyChanged("CommonKeyLength");
+                this.Key = RSB.Core.Utils.GenerateBytes(value / 8);
+            }
+        }
+
+        public byte[] Key
+        {
+            get
+            {
+                return Settings.CommonKey;
+            }
+            set
+            {
+                Settings.CommonKey = value;
+                this.OnPropertyChanged();
+            }
+        }
         public PlotModel HistogramPlotModel
         {
             get
@@ -373,7 +416,7 @@ namespace RSB_GUI
             stopWatch.Restart();
             this.IsEncryptionRunning = true;
             this._cancellationTokenSource = new CancellationTokenSource();
-            encryptor = new SquareEncryption(this.LogorithmicalBlockLength, GetCurrentVariant(), () =>
+            encryptor = new SlideCodeEncryptor(this.LogorithmicalBlockLength, this.KeyLength, () =>
             {
                 this.ElapsedTime = stopWatch.Elapsed;
                 this.OnPropertyChanged();
@@ -390,11 +433,11 @@ namespace RSB_GUI
                     {
                         if (UseEncryption)
                         {
-                            processedBytes = encryptor.Encrypt(processedBytes, _cancellationTokenSource.Token);
+                            processedBytes = encryptor.Encrypt(processedBytes, Key, _cancellationTokenSource.Token);
                         }
                         else
                         {
-                            processedBytes = encryptor.Decrypt(processedBytes, _cancellationTokenSource.Token);
+                            processedBytes = encryptor.Decrypt(processedBytes, Key, _cancellationTokenSource.Token);
                         }
                         if (_cancellationTokenSource.IsCancellationRequested)
                         {
@@ -415,11 +458,11 @@ namespace RSB_GUI
                             byte[] processedBytes = null;
                             if (UseEncryption)
                             {
-                                processedBytes = encryptor.Encrypt(bytes, _cancellationTokenSource.Token);
+                                processedBytes = encryptor.Encrypt(bytes, Key, _cancellationTokenSource.Token);
                             }
                             else
                             {
-                                processedBytes = encryptor.Decrypt(bytes, _cancellationTokenSource.Token);
+                                processedBytes = encryptor.Decrypt(bytes, Key, _cancellationTokenSource.Token);
                             }
                             if (_cancellationTokenSource.IsCancellationRequested)
                             {
@@ -522,7 +565,7 @@ namespace RSB_GUI
 
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isEncryptionRunning = false;
-        SquareEncryption encryptor = null;
+        SlideCodeEncryptor encryptor = null;
         private TimeSpan _elapsedTime;
         private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
@@ -530,6 +573,7 @@ namespace RSB_GUI
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.Settings.Save();
         }
         public enum HistoFileSource
         {

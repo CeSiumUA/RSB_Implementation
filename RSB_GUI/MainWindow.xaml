@@ -24,7 +24,7 @@
                 <TextBox Text="{Binding OutputFile}" TextWrapping="NoWrap" VerticalAlignment="Top"/>
             </DockPanel>
 
-            <Grid>
+            <Grid x:Name="EncryptorSettingsGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
@@ -32,25 +32,11 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Label Content="Число раундів:" Grid.Column="0" Grid.Row="0"></Label>
-                <ComboBox Grid.Row="1" IsEditable="True" Grid.Column="0" ItemsSource="{Binding RoundValues}" SelectedValue="{Binding SelectedRoundValues}" Margin="0,0,20,0" />
+                <Label Content="Розмір ключа:" Grid.Column="0" Grid.Row="0"></Label>
+                <ComboBox Grid.Row="1" IsEditable="True" Grid.Column="0" ItemsSource="{Binding KeyLengthOptions}" SelectedValue="{Binding CommonKeyLength}" Margin="0,0,20,0" />
                 <Label Content="Розмір блоку:" Grid.Column="1" Grid.Row="0" />
                 <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" Margin="0,0,20,0" />
-                <Grid Grid.Row="1" Grid.Column="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <RadioButton Grid.Row="0" Grid.Column="0" Content="1" IsChecked="{Binding UseVariant1}"></RadioButton>
-                    <RadioButton Grid.Row="0" Grid.Column="1" Content="2" IsChecked="{Binding UseVariant2}"></RadioButton>
-                    <RadioButton Grid.Row="0" Grid.Column="2" Content="4" IsChecked="{Binding UseVariant3}"></RadioButton>
-                </Grid>
             </Grid>
             <WrapPanel>
                 <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,15"/>
@@ -71,7 +57,7 @@
                 </Grid.RowDefinitions>
                 <ProgressBar Minimum="0" Grid.Row="0" Grid.Column="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}"/>
                 <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1"/>
-                <Button Content="Comment" Grid.Column="2" Grid.Row="0" Click="Button_Click_2"></Button>
+                <Button Visibility="Hidden" Content="Comment" Grid.Column="2" Grid.Row="0" Click="Button_Click_2"></Button>
             </Grid>
             
         </StackPanel>
