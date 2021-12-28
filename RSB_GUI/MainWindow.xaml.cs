@@ -149,17 +149,20 @@ namespace RSB_GUI
         {
             KeyGrid.Children.Clear();
             var key = mainViewModel.Key;
-            var textBoxes = key.Length / 8;
-            for (int x = 0; x < textBoxes; x++)
+            if (key != null)
             {
-                var textBox = new TextBox();
-                textBox.SetValue(Grid.RowProperty, x);
-                textBox.SetValue(Grid.ColumnProperty, 0);
-                var bytesToShow = new byte[8];
-                Array.Copy(key, x * 8, bytesToShow, 0, 8);
-                textBox.Text = BitConverter.ToString(bytesToShow);
-                textBox.TextChanged += UpdateHexKey;
-                KeyGrid.Children.Add(textBox);
+                var textBoxes = key.Length / 8;
+                for (int x = 0; x < textBoxes; x++)
+                {
+                    var textBox = new TextBox();
+                    textBox.SetValue(Grid.RowProperty, x);
+                    textBox.SetValue(Grid.ColumnProperty, 0);
+                    var bytesToShow = new byte[8];
+                    Array.Copy(key, x * 8, bytesToShow, 0, 8);
+                    textBox.Text = BitConverter.ToString(bytesToShow);
+                    textBox.TextChanged += UpdateHexKey;
+                    KeyGrid.Children.Add(textBox);
+                }
             }
         }
 

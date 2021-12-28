@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив PrimSquare" Height="440" Width="500" Loaded="Window_Loaded_1">
+        Title="Примітив SlideCode" Height="440" Width="500" Loaded="Window_Loaded_1">
     <Grid>
         <StackPanel Margin="10,10,10,10">
             <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>

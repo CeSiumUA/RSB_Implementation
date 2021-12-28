@@ -319,7 +319,7 @@ namespace RSB_GUI
         {
             get
             {
-                return Settings.CommonKey;
+                return Settings.CommonKey ?? RSB.Core.Utils.GenerateBytes(CommonKeyLength / 8);
             }
             set
             {
