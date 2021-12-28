@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -154,12 +155,42 @@ namespace RSB_GUI
                 var textBox = new TextBox();
                 textBox.SetValue(Grid.RowProperty, x);
                 textBox.SetValue(Grid.ColumnProperty, 0);
-                textBox.IsReadOnly = true;
                 var bytesToShow = new byte[8];
                 Array.Copy(key, x * 8, bytesToShow, 0, 8);
                 textBox.Text = BitConverter.ToString(bytesToShow);
+                textBox.TextChanged += UpdateHexKey;
                 KeyGrid.Children.Add(textBox);
             }
+        }
+
+        private void UpdateHexKey(object sender, TextChangedEventArgs e)
+        {
+            List<string> hexes = new List<string>();
+            foreach (var textBox in KeyGrid.Children)
+            {
+                if (textBox is TextBox)
+                {
+                    hexes.Add((textBox as TextBox).Text.Replace("-", string.Empty));
+                }
+            }
+
+            var hexString = string.Join(string.Empty, hexes);
+            var bytesArray = new byte[hexString.Length / 2];
+            if (hexString.Length % 2 == 1)
+            {
+                return;
+            }
+            for (int index = 0; index < bytesArray.Length; index++)
+            {
+                string byteValue = hexString.Substring(index * 2, 2);
+                bytesArray[index] = byte.Parse(byteValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            }
+
+            mainViewModel.Key = bytesArray;
+        }
+        private void ComboBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            ShowKey();
         }
     }
 }
