@@ -93,6 +93,7 @@ namespace RSB_GUI
             this.settings = settings;
             this.mainViewModel = new MainViewModel(settings);
             this.DataContext = mainViewModel;
+            ShowKey();
         }
 
         private void InputFileGisto_Click(object sender, RoutedEventArgs e)
@@ -136,6 +137,29 @@ namespace RSB_GUI
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void ComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            ShowKey();
+        }
+
+        private void ShowKey()
+        {
+            KeyGrid.Children.Clear();
+            var key = mainViewModel.Key;
+            var textBoxes = key.Length / 8;
+            for (int x = 0; x < textBoxes; x++)
+            {
+                var textBox = new TextBox();
+                textBox.SetValue(Grid.RowProperty, x);
+                textBox.SetValue(Grid.ColumnProperty, 0);
+                textBox.IsReadOnly = true;
+                var bytesToShow = new byte[8];
+                Array.Copy(key, x * 8, bytesToShow, 0, 8);
+                textBox.Text = BitConverter.ToString(bytesToShow);
+                KeyGrid.Children.Add(textBox);
+            }
         }
     }
 }

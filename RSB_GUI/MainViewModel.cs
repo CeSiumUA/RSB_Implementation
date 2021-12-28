@@ -324,7 +324,7 @@ namespace RSB_GUI
             set
             {
                 Settings.CommonKey = value;
-                this.OnPropertyChanged();
+                this.OnPropertyChanged("Key");
             }
         }
         public PlotModel HistogramPlotModel
@@ -428,23 +428,19 @@ namespace RSB_GUI
                 if (fileBytes is SmallFileBytes)
                 {
                     byte[] processedBytes = (fileBytes as SmallFileBytes).Bytes;
-                    encryptor.TotalSteps = SelectedRoundValues;
-                    for (int pb = 0; pb < SelectedRoundValues; pb++)
+
+                    if (UseEncryption)
                     {
-                        if (UseEncryption)
-                        {
-                            processedBytes = encryptor.Encrypt(processedBytes, Key, _cancellationTokenSource.Token);
-                        }
-                        else
-                        {
-                            processedBytes = encryptor.Decrypt(processedBytes, Key, _cancellationTokenSource.Token);
-                        }
-                        if (_cancellationTokenSource.IsCancellationRequested)
-                        {
-                            this.IsEncryptionRunning = false;
-                            return;
-                        }
-                        encryptor.Step = pb + 1;
+                        processedBytes = encryptor.Encrypt(processedBytes, Key, _cancellationTokenSource.Token);
+                    }
+                    else
+                    {
+                        processedBytes = encryptor.Decrypt(processedBytes, Key, _cancellationTokenSource.Token);
+                    }
+                    if (_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        this.IsEncryptionRunning = false;
+                        return;
                     }
                     File.WriteAllBytes(this.OutputFile, processedBytes);
                 }

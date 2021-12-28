@@ -5,11 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив PrimSquare" Height="340" Width="500" Loaded="Window_Loaded_1">
+        Title="Примітив PrimSquare" Height="440" Width="500" Loaded="Window_Loaded_1">
     <Grid>
-        <!--<TabControl x:Name="MainTabControl">
-            <TabItem Header="Шифрування">
-                <Grid>-->
         <StackPanel Margin="10,10,10,10">
             <Label Content="Вхідний файл:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <DockPanel LastChildFill="True">
@@ -28,15 +25,27 @@
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Label Content="Розмір ключа:" Grid.Column="0" Grid.Row="0"></Label>
-                <ComboBox Grid.Row="1" IsEditable="True" Grid.Column="0" ItemsSource="{Binding KeyLengthOptions}" SelectedValue="{Binding CommonKeyLength}" Margin="0,0,20,0" />
+                <ComboBox Grid.Row="1" IsEditable="True" Grid.Column="0" ItemsSource="{Binding KeyLengthOptions}" SelectedValue="{Binding CommonKeyLength}" Margin="0,0,20,0" DropDownClosed="ComboBox_DropDownClosed" />
                 <Label Content="Розмір блоку:" Grid.Column="1" Grid.Row="0" />
                 <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" Margin="0,0,20,0" />
+                <Grid x:Name="KeyGrid" Column="0" Row="2" Margin="0,0,20,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                </Grid>
             </Grid>
             <WrapPanel>
                 <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,15"/>
@@ -61,42 +70,5 @@
             </Grid>
             
         </StackPanel>
-        <!--<CheckBox Content="Використовувати спільний ключ" HorizontalAlignment="Left" Margin="135,189,0,0" VerticalAlignment="Top"/>-->
-        <!--</Grid>
-            </TabItem>-->
-        <!--<TabItem Header="Гісто">
-                <Grid>
-                    <TabControl>
-                        <TabItem Header="Гістограма">
-                            <Grid>
-                                -->
-        <!--<oxy:PlotView Model="{Binding HistogramPlotModel}"/>-->
-        <!--
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Таблиця">
-                            <Grid>
-                                <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,258">
-                                    <Label Content="{Binding Enthrophy}"
-                                           HorizontalAlignment="Center"
-                                           FontWeight="Bold"></Label>
-                                    <ComboBox HorizontalAlignment="Center" IsEditable="True"
-                                              Width="100" VerticalAlignment="Top"
-                                              ItemsSource="{Binding AvailableTableColumns}"
-                                              SelectedValue="{Binding TableColumnsCount}" />
-                                </WrapPanel>
-                                <DataGrid x:Name="HistogramDataGrid" CanUserAddRows="False" CanUserDeleteRows="False"
-                                          CanUserResizeRows="False" IsReadOnly="True"
-                                          AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}"
-                                          ColumnWidth="*" Margin="0,26,0,0" FontSize="12"
-                                          RowHeight="20" RowHeaderWidth="50" LoadingRow="HistogramDataGrid_LoadingRow">
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
-                </Grid>
-            </TabItem>-->
-        <!--</TabControl>-->
-        
     </Grid>
 </Window>
