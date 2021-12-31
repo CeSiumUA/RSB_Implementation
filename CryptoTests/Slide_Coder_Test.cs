@@ -6,7 +6,7 @@ using Xunit;
 
 namespace CryptoTests;
 
-public class UnitTest1
+public class Slide_Coder_Test
 {
     [Fact]
     public void Encryptor_Test()
@@ -22,10 +22,10 @@ public class UnitTest1
         Assert.Equal(data.Length, decryptedData.Length);
         Assert.Equal(encryptedData.Length, decryptedData.Length);
 
-        for (int i = 0; i < decryptedData.Length; i++)
-        {
-            Assert.Equal(data[i], decryptedData[i]);
-        }
+        var dataHash = BitConverter.ToString(SHA256.Create().ComputeHash(data));
+        var decryptedHash = BitConverter.ToString(SHA256.Create().ComputeHash(decryptedData));
+
+        Assert.Equal(dataHash, decryptedHash);
     }
 
     private EncryptorWithData CreateEncryptor()
@@ -35,7 +35,7 @@ public class UnitTest1
         var keySize = bitSizes[random.Next(0, bitSizes.Length)];
         var blockSize = bitSizes[random.Next(0, bitSizes.Length)];
         var encryptor = new SlideCodeEncryptor(blockSize, keySize);
-        var dataBytes = RandomNumberGenerator.GetBytes(random.Next((int)(Int32.MaxValue / 10e6), (int)(Int32.MaxValue / 10e2)));
+        var dataBytes = RandomNumberGenerator.GetBytes(random.Next((int)(Int32.MaxValue / 10e6), (int)(Int32.MaxValue / 10e4)));
         var keyBytes = RandomNumberGenerator.GetBytes(keySize);
         return new EncryptorWithData
         {

@@ -23,7 +23,10 @@ namespace RSB_GUI.Encryptors
             set
             {
                 step = value;
-                updateCurrentStep();
+                if (updateCurrentStep != null)
+                {
+                    updateCurrentStep();
+                }
             }
         }
         public int TotalSteps
@@ -35,7 +38,10 @@ namespace RSB_GUI.Encryptors
             set
             {
                 totalSteps = value;
-                updateCurrentStep();
+                if (updateCurrentStep != null)
+                {
+                    updateCurrentStep();
+                }
             }
         }
         public int BlockSizeBytes
@@ -106,18 +112,24 @@ namespace RSB_GUI.Encryptors
                 Array.Copy(bytesToProcess, encryptedBytes, encryptedBytes.Length);
                 for (int r = 0; r < rounds; r++)
                 {
-                    var roundKeyBytes = new byte[4];
-                    Array.Copy(key, r * 4, roundKeyBytes, 0, 4);
-                    byte[] roundEncryptedBytes = null;
-                    if ((r + 1) % 2 == 0)
-                    {
-                        roundEncryptedBytes = LeftGrayScheme.Encrypt(encryptedBytes, roundKeyBytes);
-                    }
-                    else
-                    {
-                        roundEncryptedBytes = RightGrayScheme.Encrypt(encryptedBytes, roundKeyBytes);
-                    }
-                    Array.Copy(roundEncryptedBytes, encryptedBytes, roundEncryptedBytes.Length);
+                    var roundKeyBytes = new byte[8];
+
+                    Array.Copy(key, r * 8, roundKeyBytes, 0, 8);
+
+                    var leftRoundKeyBytes = new byte[4];
+                    var rightRoundKeyBytes = new byte[4];
+                    
+                    Array.Copy(roundKeyBytes, 0, leftRoundKeyBytes, 0, 4);
+                    Array.Copy(roundKeyBytes, 4, rightRoundKeyBytes, 0, 4);
+                    
+                    var leftEncryptedBytes = LeftGrayScheme.Encrypt(encryptedBytes, leftRoundKeyBytes);
+
+                    byte[] encrypted = new byte[leftEncryptedBytes.Length];
+                    Array.Copy(leftEncryptedBytes, encrypted, leftEncryptedBytes.Length);
+
+                    var rightEncryptedBytes = RightGrayScheme.Encrypt(encrypted, rightRoundKeyBytes);
+                    
+                    Array.Copy(rightEncryptedBytes, encryptedBytes, rightEncryptedBytes.Length);
                 }
                 Array.Copy(encryptedBytes, 0, data, i * BlockSizeBytes, BlockSizeBytes);
             }
@@ -130,7 +142,7 @@ namespace RSB_GUI.Encryptors
         {
             data = RSB.Core.Utils.FillRemnantBytes(data, BlockSizeBytes);
             TotalSteps = data.Length / BlockSizeBytes;
-            int rounds = key.Length / 4;
+            int rounds = key.Length / 8;
             for (int i = 0; i < data.Length / BlockSizeBytes; i++)
             {
                 var bytesToProcess = new byte[BlockSizeBytes];
@@ -139,18 +151,24 @@ namespace RSB_GUI.Encryptors
                 Array.Copy(bytesToProcess, decryptedBytes, decryptedBytes.Length);
                 for (int r = 0; r < rounds; r++)
                 {
-                    var roundKeyBytes = new byte[4];
-                    Array.Copy(key, (rounds - r - 1) * 4, roundKeyBytes, 0, 4);
-                    byte[] roundEncryptedBytes = null;
-                    if (r % 2 == 0)
-                    {
-                        roundEncryptedBytes = LeftGrayScheme.Decrypt(decryptedBytes, roundKeyBytes);
-                    }
-                    else
-                    {
-                        roundEncryptedBytes = RightGrayScheme.Decrypt(decryptedBytes, roundKeyBytes);
-                    }
-                    Array.Copy(roundEncryptedBytes, decryptedBytes, roundEncryptedBytes.Length);
+                    var roundKeyBytes = new byte[8];
+
+                    Array.Copy(key, r * 8, roundKeyBytes, 0, 8);
+
+                    var leftRoundKeyBytes = new byte[4];
+                    var rightRoundKeyBytes = new byte[4];
+
+                    Array.Copy(roundKeyBytes, 0, leftRoundKeyBytes, 0, 4);
+                    Array.Copy(roundKeyBytes, 4, rightRoundKeyBytes, 0, 4);
+
+                    var rightDecryptedBytes = RightGrayScheme.Decrypt(decryptedBytes, rightRoundKeyBytes);
+
+                    byte[] encrypted = new byte[rightDecryptedBytes.Length];
+                    Array.Copy(rightDecryptedBytes, encrypted, rightDecryptedBytes.Length);
+
+                    var leftDecryptedBytes = LeftGrayScheme.Decrypt(encrypted, leftRoundKeyBytes);
+
+                    Array.Copy(leftDecryptedBytes, decryptedBytes, leftDecryptedBytes.Length);
                 }
                 Array.Copy(decryptedBytes, 0, data, i * BlockSizeBytes, BlockSizeBytes);
             }
