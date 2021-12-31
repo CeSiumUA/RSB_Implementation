@@ -93,10 +93,10 @@ namespace RSB_GUI.Encryptors
             updateCurrentStep = stepUpdater;
         }
 
-        public byte[] Encrypt(byte[] data, byte[] key, CancellationToken cancellationToken)
+        public byte[] Encrypt(byte[] data, byte[] key, CancellationToken cancellationToken = default(CancellationToken))
         {
             data = RSB.Core.Utils.FillRemnantBytes(data, BlockSizeBytes);
-            int rounds = key.Length / 4;
+            int rounds = key.Length / 8;
             TotalSteps = data.Length / BlockSizeBytes;
             for (int i = 0; i < data.Length / BlockSizeBytes; i++)
             {
@@ -126,7 +126,7 @@ namespace RSB_GUI.Encryptors
             return data;
         }
 
-        public byte[] Decrypt(byte[] data, byte[] key, CancellationToken cancellationToken)
+        public byte[] Decrypt(byte[] data, byte[] key, CancellationToken cancellationToken = default(CancellationToken))
         {
             data = RSB.Core.Utils.FillRemnantBytes(data, BlockSizeBytes);
             TotalSteps = data.Length / BlockSizeBytes;

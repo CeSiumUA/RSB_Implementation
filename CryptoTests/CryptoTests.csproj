@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RSB.Core\RSB.Core.csproj" />
+      <ProjectReference Include="..\RSB_GUI\RSB_GUI.csproj" />
     </ItemGroup>
 
 </Project>
