@@ -37,6 +37,7 @@ namespace RSB_GUI
                 }
             }
         }
+
         public int[] AvailableTableColumns
         {
             get
@@ -114,7 +115,7 @@ namespace RSB_GUI
         {
             get
             {
-                return new int[] { 128, 192, 256 };
+                return new int[] { 128, 192, 256, 512 };
             }
         }
         public int[] RoundValues
@@ -297,7 +298,7 @@ namespace RSB_GUI
         {
             get
             {
-                return new int[] {128, 192, 256};
+                return new int[] {128, 192, 256, 512};
             }
         }
 
