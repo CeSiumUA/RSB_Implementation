@@ -149,7 +149,7 @@ namespace RSB_GUI.Encryptors
                 Array.Copy(data, i * BlockSizeBytes, bytesToProcess, 0, BlockSizeBytes);
                 byte[] decryptedBytes = new byte[bytesToProcess.Length];
                 Array.Copy(bytesToProcess, decryptedBytes, decryptedBytes.Length);
-                for (int r = 0; r < rounds; r++)
+                for (int r = rounds - 1; r >= 0; r--)
                 {
                     var roundKeyBytes = new byte[8];
 
