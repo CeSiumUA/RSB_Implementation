@@ -150,8 +150,15 @@ namespace RSB_GUI.Encryptors
             data = RSB.Core.Utils.FillRemnantBytes(data, BlockSizeBytes);
             TotalSteps = data.Length / BlockSizeBytes;
             int rounds = key.Length / 8;
+            var stepDelta = TotalSteps / 10;
+            var stepToUpdateOn = 0;
             for (int i = 0; i < data.Length / BlockSizeBytes; i++)
             {
+                if (stepToUpdateOn == i)
+                {
+                    this.Step = i;
+                    stepToUpdateOn += stepDelta;
+                }
                 var bytesToProcess = new byte[BlockSizeBytes];
                 Array.Copy(data, i * BlockSizeBytes, bytesToProcess, 0, BlockSizeBytes);
                 byte[] decryptedBytes = new byte[bytesToProcess.Length];
