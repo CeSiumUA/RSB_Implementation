@@ -17,8 +17,7 @@ namespace RSB_GUI
         public string InputFilePath { get; set; } = string.Empty;
         public string OutputFilePath { get; set; } = string.Empty;
         public bool UseCommonKey { get; set; }
-        public byte[] CommonKey { get; set; }
-        public int CommonKeyLength { get; set; } = 128;
+        public string KeyFilePath { get; set; } = string.Empty;
         public bool UseEncryption { get; set; } = true;
         public int TableColumnsCount { get; set; } = 8;
         public bool UseVariant1 { get; set;} = true;

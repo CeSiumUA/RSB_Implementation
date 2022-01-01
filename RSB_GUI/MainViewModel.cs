@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,6 +16,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using RSB_GUI.Encryptors;
 using RSB_GUI.Utils;
+using MessageBox = System.Windows.MessageBox;
 using TickStyle = OxyPlot.Axes.TickStyle;
 
 namespace RSB_GUI
@@ -306,13 +308,35 @@ namespace RSB_GUI
         {
             get
             {
-                return Settings.CommonKeyLength;
+                return commonKeyLength;
             }
             set
             {
-                Settings.CommonKeyLength = value;
+                commonKeyLength = value;
                 this.OnPropertyChanged("CommonKeyLength");
-                this.Key = RSB.Core.Utils.GenerateBytes(value / 8);
+                GenerateCommonKey();
+            }
+        }
+
+        public string CommonKeyPathLabel
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(CommonKeyPath) ? $"Завантажено файл з ключем: {Environment.NewLine}{CommonKeyPath}" : "";
+            }
+        }
+
+        public string CommonKeyPath
+        {
+            get
+            {
+                return Settings.KeyFilePath;
+            }
+            set
+            {
+                Settings.KeyFilePath = value;
+                this.OnPropertyChanged("CommonKeyPath");
+                this.OnPropertyChanged("CommonKeyPathLabel");
             }
         }
 
@@ -320,15 +344,23 @@ namespace RSB_GUI
         {
             get
             {
-                if (Settings.CommonKey == null)
+                
+                if (key == null)
                 {
-                    Settings.CommonKey = RSB.Core.Utils.GenerateBytes(CommonKeyLength / 8);
+                    if (File.Exists(CommonKeyPath))
+                    {
+                        LoadKeyFromFile(CommonKeyPath);
+                    }
+                    else
+                    {
+                        GenerateCommonKey();
+                    }
                 }
-                return Settings.CommonKey;
+                return key;
             }
             set
             {
-                Settings.CommonKey = value;
+                key = value;
                 this.OnPropertyChanged("Key");
             }
         }
@@ -507,6 +539,36 @@ namespace RSB_GUI
             }
         }
 
+        public void SaveCommonKey(string filePath)
+        {
+            File.WriteAllBytes(filePath, this.Key);
+            this.CommonKeyPath = filePath;
+            this.OnPropertyChanged();
+        }
+
+        public void LoadKeyFromFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+            var keyBytes = File.ReadAllBytes(filePath);
+            this.CommonKeyPath = filePath;
+            this.Key = keyBytes;
+            this.commonKeyLength = Key.Length * 8;
+            this.OnPropertyChanged("CommonKeyLength");
+            if (!this.KeyLengthOptions.Contains(this.CommonKeyLength))
+            {
+                MessageBox.Show("Невірна довжина ключа!", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void GenerateCommonKey()
+        {
+            this.Key = RSB.Core.Utils.GenerateBytes(CommonKeyLength / 8);
+            this.CommonKeyPath = string.Empty;
+        }
+
         public void Histo(HistoFileSource histoFileSource = HistoFileSource.Input)
         {
             string path = histoFileSource == HistoFileSource.Input ? this.InputFile : this.OutputFile;
@@ -571,6 +633,8 @@ namespace RSB_GUI
         private Histogram _histogram = new Histogram();
         private PlotModel _histogramPlotModel = new PlotModel();
         private int logorithmicalBlockLength = 8;
+        private int commonKeyLength = 128;
+        private byte[] key = null;
         private void OnPropertyChanged(string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

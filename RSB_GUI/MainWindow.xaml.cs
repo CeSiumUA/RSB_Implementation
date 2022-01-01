@@ -15,11 +15,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace RSB_GUI
 {
@@ -147,7 +150,19 @@ namespace RSB_GUI
 
         private void ShowKey()
         {
-            KeyGrid.Children.Clear();
+            var toRemove = new List<TextBox>();
+            foreach (var tb in KeyGrid.Children)
+            {
+                if (tb is TextBox)
+                {
+                    toRemove.Add(tb as TextBox);
+                }
+            }
+
+            foreach (var rm in toRemove)
+            {
+                KeyGrid.Children.Remove(rm);
+            }
             var key = mainViewModel.Key;
             if (key != null)
             {
@@ -193,6 +208,36 @@ namespace RSB_GUI
         }
         private void ComboBox_KeyDown(object sender, KeyEventArgs e)
         {
+            ShowKey();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            this.mainViewModel.GenerateCommonKey();
+            ShowKey();
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    this.mainViewModel.SaveCommonKey(sfd.FileName);
+                }
+            }
+            ShowKey();
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            using(OpenFileDialog ofd = new OpenFileDialog())
+            {
+                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    this.mainViewModel.LoadKeyFromFile(ofd.FileName);
+                }
+            }
             ShowKey();
         }
     }
