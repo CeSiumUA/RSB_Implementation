@@ -11,11 +11,6 @@ namespace RSB.Core.GrayScheme
     {
         public static byte[] Encrypt(byte[] array, byte[] key, int grayNumber = 4)
         {
-            if (key.Length != grayNumber)
-            {
-                throw new ArgumentException("Key must be 4 bytes long!");
-            }
-
             int operands = array.Length / grayNumber;
             var keyBits = new BitArray(key);
             BitArray[] bits = new BitArray[operands];

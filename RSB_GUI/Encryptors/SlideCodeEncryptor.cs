@@ -90,24 +90,40 @@ namespace RSB_GUI.Encryptors
                 _keySizeBytes = value;
             }
         }
+
+        public int ScInterval
+        {
+            get
+            {
+                return _scInterval;
+            }
+            set
+            {
+                _scInterval = value;
+            }
+        }
         private int totalSteps;
         private int step;
-        public SlideCodeEncryptor(int blockSize, int keySize, Action stepUpdater = null)
+        private int _scInterval;
+        public SlideCodeEncryptor(int blockSize, int keySize, int scInterval, Action stepUpdater = null)
         {
             BlockSize = blockSize;
             KeySize = keySize;
             updateCurrentStep = stepUpdater;
+            ScInterval = scInterval;
         }
 
         public byte[] Encrypt(byte[] data, byte[] key, CancellationToken cancellationToken = default(CancellationToken))
         {
             data = RSB.Core.Utils.FillRemnantBytes(data, BlockSizeBytes);
-            int rounds = key.Length / 8;
+            int roundKeyLength = (ScInterval * 2 / 8);
+            int rounds = key.Length / roundKeyLength;
             TotalSteps = data.Length / BlockSizeBytes;
             var stepDelta = TotalSteps / 10;
             var stepToUpdateOn = 0;
             for (int i = 0; i < data.Length / BlockSizeBytes; i++)
             {
+                if (cancellationToken.IsCancellationRequested) break;
                 if (stepToUpdateOn == i)
                 {
                     this.Step = i;
@@ -119,22 +135,23 @@ namespace RSB_GUI.Encryptors
                 Array.Copy(bytesToProcess, encryptedBytes, encryptedBytes.Length);
                 for (int r = 0; r < rounds; r++)
                 {
-                    var roundKeyBytes = new byte[8];
+                    if (cancellationToken.IsCancellationRequested) break;
+                    var roundKeyBytes = new byte[roundKeyLength];
 
-                    Array.Copy(key, r * 8, roundKeyBytes, 0, 8);
+                    Array.Copy(key, r * roundKeyLength, roundKeyBytes, 0, roundKeyLength);
 
-                    var leftRoundKeyBytes = new byte[4];
-                    var rightRoundKeyBytes = new byte[4];
+                    var leftRoundKeyBytes = new byte[roundKeyLength / 2];
+                    var rightRoundKeyBytes = new byte[roundKeyLength / 2];
                     
-                    Array.Copy(roundKeyBytes, 0, leftRoundKeyBytes, 0, 4);
-                    Array.Copy(roundKeyBytes, 4, rightRoundKeyBytes, 0, 4);
+                    Array.Copy(roundKeyBytes, 0, leftRoundKeyBytes, 0, roundKeyLength / 2);
+                    Array.Copy(roundKeyBytes, roundKeyLength / 2, rightRoundKeyBytes, 0, roundKeyLength / 2);
                     
-                    var leftEncryptedBytes = LeftGrayScheme.Encrypt(encryptedBytes, leftRoundKeyBytes);
+                    var leftEncryptedBytes = LeftGrayScheme.Encrypt(encryptedBytes, leftRoundKeyBytes, leftRoundKeyBytes.Length);
 
                     byte[] encrypted = new byte[leftEncryptedBytes.Length];
                     Array.Copy(leftEncryptedBytes, encrypted, leftEncryptedBytes.Length);
 
-                    var rightEncryptedBytes = RightGrayScheme.Encrypt(encrypted, rightRoundKeyBytes);
+                    var rightEncryptedBytes = RightGrayScheme.Encrypt(encrypted, rightRoundKeyBytes, rightRoundKeyBytes.Length);
                     
                     Array.Copy(rightEncryptedBytes, encryptedBytes, rightEncryptedBytes.Length);
                 }
@@ -149,11 +166,13 @@ namespace RSB_GUI.Encryptors
         {
             data = RSB.Core.Utils.FillRemnantBytes(data, BlockSizeBytes);
             TotalSteps = data.Length / BlockSizeBytes;
-            int rounds = key.Length / 8;
+            int roundKeyLength = (ScInterval * 2 / 8);
+            int rounds = key.Length / roundKeyLength;
             var stepDelta = TotalSteps / 10;
             var stepToUpdateOn = 0;
             for (int i = 0; i < data.Length / BlockSizeBytes; i++)
             {
+                if (cancellationToken.IsCancellationRequested) break;
                 if (stepToUpdateOn == i)
                 {
                     this.Step = i;
@@ -165,22 +184,23 @@ namespace RSB_GUI.Encryptors
                 Array.Copy(bytesToProcess, decryptedBytes, decryptedBytes.Length);
                 for (int r = rounds - 1; r >= 0; r--)
                 {
-                    var roundKeyBytes = new byte[8];
+                    if (cancellationToken.IsCancellationRequested) break;
+                    var roundKeyBytes = new byte[roundKeyLength];
 
-                    Array.Copy(key, r * 8, roundKeyBytes, 0, 8);
+                    Array.Copy(key, r * roundKeyLength, roundKeyBytes, 0, roundKeyLength);
 
-                    var leftRoundKeyBytes = new byte[4];
-                    var rightRoundKeyBytes = new byte[4];
+                    var leftRoundKeyBytes = new byte[roundKeyLength / 2];
+                    var rightRoundKeyBytes = new byte[roundKeyLength / 2];
 
-                    Array.Copy(roundKeyBytes, 0, leftRoundKeyBytes, 0, 4);
-                    Array.Copy(roundKeyBytes, 4, rightRoundKeyBytes, 0, 4);
+                    Array.Copy(roundKeyBytes, 0, leftRoundKeyBytes, 0, roundKeyLength / 2);
+                    Array.Copy(roundKeyBytes, roundKeyLength / 2, rightRoundKeyBytes, 0, roundKeyLength / 2);
 
-                    var rightDecryptedBytes = RightGrayScheme.Decrypt(decryptedBytes, rightRoundKeyBytes);
+                    var rightDecryptedBytes = RightGrayScheme.Decrypt(decryptedBytes, rightRoundKeyBytes, rightRoundKeyBytes.Length);
 
                     byte[] encrypted = new byte[rightDecryptedBytes.Length];
                     Array.Copy(rightDecryptedBytes, encrypted, rightDecryptedBytes.Length);
 
-                    var leftDecryptedBytes = LeftGrayScheme.Decrypt(encrypted, leftRoundKeyBytes);
+                    var leftDecryptedBytes = LeftGrayScheme.Decrypt(encrypted, leftRoundKeyBytes, leftRoundKeyBytes.Length);
 
                     Array.Copy(leftDecryptedBytes, decryptedBytes, leftDecryptedBytes.Length);
                 }

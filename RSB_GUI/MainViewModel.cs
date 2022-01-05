@@ -453,7 +453,7 @@ namespace RSB_GUI
             stopWatch.Restart();
             this.IsEncryptionRunning = true;
             this._cancellationTokenSource = new CancellationTokenSource();
-            encryptor = new SlideCodeEncryptor(this.LogorithmicalBlockLength, this.KeyLength, () =>
+            encryptor = new SlideCodeEncryptor(this.LogorithmicalBlockLength, this.KeyLength, GetCurrentScIntervalVariant(), () =>
             {
                 this.ElapsedTime = stopWatch.Elapsed;
                 this.OnPropertyChanged();
@@ -477,6 +477,8 @@ namespace RSB_GUI
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
                         this.IsEncryptionRunning = false;
+                        encryptor.Step = 0;
+                        this.OnPropertyChanged();
                         return;
                     }
                     File.WriteAllBytes(this.OutputFile, processedBytes);
@@ -500,6 +502,8 @@ namespace RSB_GUI
                             if (_cancellationTokenSource.IsCancellationRequested)
                             {
                                 this.IsEncryptionRunning = false;
+                                encryptor.Step = 0;
+                                this.OnPropertyChanged();
                                 return;
                             }
                             await fs.WriteAsync(processedBytes, 0, processedBytes.Length, _cancellationTokenSource.Token);
@@ -509,6 +513,8 @@ namespace RSB_GUI
                 
                 this.IsEncryptionRunning = false;
                 this.ElapsedTime = stopWatch.Elapsed;
+                encryptor.Step = 0;
+                this.OnPropertyChanged();
             }).Start();
         }
 
@@ -674,12 +680,12 @@ namespace RSB_GUI
                 Bytes = File.ReadAllBytes(path)
             };
         }
-        private BlockSizeVariant GetCurrentVariant()
+        private int GetCurrentScIntervalVariant()
         {
-            if(UseVariant1) return BlockSizeVariant.Variant1;
-            if(UseVariant2) return BlockSizeVariant.Variant2;
-            if(UseVariant3) return BlockSizeVariant.Variant3;
-            return BlockSizeVariant.Variant1;
+            if(UseVariant1) return 8;
+            if(UseVariant2) return 16;
+            if(UseVariant3) return 32;
+            return 32;
         }
     }
     public enum BlockSizeVariant : short

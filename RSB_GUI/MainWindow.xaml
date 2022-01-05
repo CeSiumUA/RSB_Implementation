@@ -74,6 +74,21 @@
             <WrapPanel>
                 <RadioButton Content="Шифратор" IsChecked="{Binding UseEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,20,15"/>
                 <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,15"/>
+                <Grid Margin="20,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label HorizontalAlignment="Center" Content="Інтервал SC" Grid.Row="0" Grid.ColumnSpan="3"></Label>
+                    <RadioButton IsChecked="{Binding UseVariant1}" Grid.Row="1" Grid.Column="0" Content="8" Margin="0,0,10,0" HorizontalContentAlignment="Left" VerticalContentAlignment="Top"></RadioButton>
+                    <RadioButton IsChecked="{Binding UseVariant2}" Grid.Row="1" Grid.Column="1" Content="16" Margin="0,0,10,0"></RadioButton>
+                    <RadioButton IsChecked="{Binding UseVariant3}" Grid.Row="1" Grid.Column="2" Content="32"></RadioButton>
+                </Grid>
             </WrapPanel>
             <WrapPanel>
                 <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/>
