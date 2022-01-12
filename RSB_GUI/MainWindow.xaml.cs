@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -124,7 +125,7 @@ namespace RSB_GUI
 
             var tableWindow = new TableWindow(new TableViewModel(filePath, settings, histoFileSource))
             {
-                Width = 1200,
+                Width = 450,
                 Height = 850
             };
             tableWindow.Show();
@@ -272,7 +273,7 @@ namespace RSB_GUI
                         
                     }
                     string gistoFileName1 = $"K{keyLength}_R8_N{blockLength}.png";
-                    var entropy1 = MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName1)}", $"{Path.Combine(histoDir.FullName, gistoFileName1)}");
+                    var entropy1 = await MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName1)}", $"{Path.Combine(histoDir.FullName, gistoFileName1)}");
                     var testing1 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -292,7 +293,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName2 = $"K{keyLength}_R16_N{blockLength}.png";
-                    var entropy2 = MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName2)}", $"{Path.Combine(histoDir.FullName, gistoFileName2)}");
+                    var entropy2 = await MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName2)}", $"{Path.Combine(histoDir.FullName, gistoFileName2)}");
                     var testing2 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -312,7 +313,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName3 = $"K{keyLength}_R32_N{blockLength}.png";
-                    var entropy3 = MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName3)}", $"{Path.Combine(histoDir.FullName, gistoFileName3)}");
+                    var entropy3 = await MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName3)}", $"{Path.Combine(histoDir.FullName, gistoFileName3)}");
                     var testing3 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -329,7 +330,7 @@ namespace RSB_GUI
                         bf.Serialize(fs, testingValues);
                     }
 
-                    double MakeHistoScreenshot(string tableFileName, string histoFileName)
+                    async Task<double> MakeHistoScreenshot(string tableFileName, string histoFileName)
                     {
                         var filePath = this.mainViewModel.OutputFile;
                         var histoWindow = new GistoWindow(filePath, MainViewModel.HistoFileSource.Output)
@@ -344,11 +345,12 @@ namespace RSB_GUI
 
                         var tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
                         {
-                            Width = 1200,
+                            Width = 450,
                             Height = 850
                         };
                         tableWindow.InitializeComponent();
                         tableWindow.Show();
+                        await Task.Delay(2000);
                         tableWindow.MakeScreenshot(tableFileName);
                         tableWindow.Close();
 
