@@ -10,7 +10,7 @@
         <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,258">
             <Label Content="{Binding Enthrophy}"
                                            HorizontalAlignment="Center"
-                                           FontWeight="Bold"></Label>
+                                           FontWeight="Bold" MouseDown="Label_MouseDown"></Label>
             <ComboBox HorizontalAlignment="Center" IsEditable="True"
                                               Width="100" VerticalAlignment="Top"
                                               ItemsSource="{Binding AvailableTableColumns}"

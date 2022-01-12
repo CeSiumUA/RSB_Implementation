@@ -447,6 +447,21 @@ namespace RSB_GUI
             Settings = settings ?? new Settings();
         }
 
+        public void SynchroEncrypt()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Restart();
+            encryptor = new SlideCodeEncryptor(this.LogorithmicalBlockLength, this.KeyLength, GetCurrentScIntervalVariant(), () =>
+            {
+                this.ElapsedTime = stopWatch.Elapsed;
+                this.OnPropertyChanged();
+            });
+            var fileBytes = ReadFileBytes(this.InputFile);
+            byte[] processedBytes = (fileBytes as SmallFileBytes).Bytes;
+            var resultBytes = encryptor.Encrypt(processedBytes, Key);
+            File.WriteAllBytes(this.OutputFile, processedBytes);
+        }
+
         public async Task StartEncryption()
         {
             Stopwatch stopWatch = new Stopwatch();

@@ -103,8 +103,9 @@
                     <RowDefinition Height="30"></RowDefinition>
                 </Grid.RowDefinitions>
                 <ProgressBar Minimum="0" Grid.Row="0" Grid.Column="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}"/>
-                <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1"/>
+                <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1" MouseDown="Label_MouseDown"/>
             </Grid>
+            <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Авто-документація" Click="Button_Click_6"/>
 
         </StackPanel>
     </Grid>

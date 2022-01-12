@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Clipboard = System.Windows.Clipboard;
 
 namespace RSB_GUI.Windows
 {
@@ -26,6 +27,17 @@ namespace RSB_GUI.Windows
             InitializeComponent();
             this._viewModel = tableViewModel;
             this.DataContext = _viewModel;
+        }
+
+        public void MakeScreenshot(string fileName)
+        {
+            var screenShot = GenerateScreenshot();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(screenShot));
+            using (var stream = File.Create(fileName))
+            {
+                encoder.Save(stream);
+            }
         }
 
         private void HistogramDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
@@ -93,6 +105,11 @@ namespace RSB_GUI.Windows
 
             renderTarget.Render(this);
             return renderTarget;
+        }
+
+        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Clipboard.SetText(this._viewModel.Histogram.Entropy.ToString("##.#######"));
         }
     }
 }

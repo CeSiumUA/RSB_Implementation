@@ -20,8 +20,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using RSB_GUI.Utils;
+using Clipboard = System.Windows.Clipboard;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using Path = System.IO.Path;
 using TextBox = System.Windows.Controls.TextBox;
 
 namespace RSB_GUI
@@ -239,6 +242,120 @@ namespace RSB_GUI
                 }
             }
             ShowKey();
+        }
+
+        private void Label_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Clipboard.SetText(this.mainViewModel.ElapsedTime.TotalSeconds.ToString());
+        }
+
+        private async void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            List<Testing> testingValues = new List<Testing>();
+            foreach (var keyLength in mainViewModel.KeyLengthOptions)
+            {
+                this.mainViewModel.CommonKeyLength = keyLength;
+
+                foreach (var blockLength in mainViewModel.BlockLengthValues)
+                {
+                    var imagesDir = Directory.CreateDirectory("Images");
+                    var tablesDir = Directory.CreateDirectory(Path.Combine(imagesDir.FullName, "Tables"));
+                    var histoDir = Directory.CreateDirectory(Path.Combine(imagesDir.FullName, "Gisto"));
+                    this.mainViewModel.LogorithmicalBlockLength = blockLength;
+
+                    this.mainViewModel.UseVariant1 = true;
+                    this.mainViewModel.UseVariant2 = false;
+                    this.mainViewModel.UseVariant3 = false;
+                    await this.mainViewModel.StartEncryption();
+                    while (this.mainViewModel.IsEncryptionRunning)
+                    {
+                        
+                    }
+                    string gistoFileName1 = $"K{keyLength}_R8_N{blockLength}.png";
+                    var entropy1 = MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName1)}", $"{Path.Combine(histoDir.FullName, gistoFileName1)}");
+                    var testing1 = new Testing()
+                    {
+                        BlockLength = blockLength,
+                        KeyLength = keyLength,
+                        SC = 8,
+                        TimeToComplete = mainViewModel.ElapsedTime.TotalMilliseconds,
+                        Entropy = entropy1
+                    };
+                    testingValues.Add(testing1);
+
+                    this.mainViewModel.UseVariant1 = false;
+                    this.mainViewModel.UseVariant2 = true;
+                    this.mainViewModel.UseVariant3 = false;
+                    await this.mainViewModel.StartEncryption();
+                    while (this.mainViewModel.IsEncryptionRunning)
+                    {
+
+                    }
+                    string gistoFileName2 = $"K{keyLength}_R16_N{blockLength}.png";
+                    var entropy2 = MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName2)}", $"{Path.Combine(histoDir.FullName, gistoFileName2)}");
+                    var testing2 = new Testing()
+                    {
+                        BlockLength = blockLength,
+                        KeyLength = keyLength,
+                        SC = 16,
+                        TimeToComplete = mainViewModel.ElapsedTime.TotalMilliseconds,
+                        Entropy = entropy2
+                    };
+                    testingValues.Add(testing2);
+
+                    this.mainViewModel.UseVariant1 = false;
+                    this.mainViewModel.UseVariant2 = false;
+                    this.mainViewModel.UseVariant3 = true;
+                    await this.mainViewModel.StartEncryption();
+                    while (this.mainViewModel.IsEncryptionRunning)
+                    {
+
+                    }
+                    string gistoFileName3 = $"K{keyLength}_R32_N{blockLength}.png";
+                    var entropy3 = MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName3)}", $"{Path.Combine(histoDir.FullName, gistoFileName3)}");
+                    var testing3 = new Testing()
+                    {
+                        BlockLength = blockLength,
+                        KeyLength = keyLength,
+                        SC = 32,
+                        TimeToComplete = mainViewModel.ElapsedTime.TotalMilliseconds,
+                        Entropy = entropy3
+                    };
+                    testingValues.Add(testing3);
+
+                    using (FileStream fs = new FileStream(Path.Combine(imagesDir.FullName, "values.json"), FileMode.Create))
+                    {
+                        BinaryFormatter bf = new BinaryFormatter();
+                        bf.Serialize(fs, testingValues);
+                    }
+
+                    double MakeHistoScreenshot(string tableFileName, string histoFileName)
+                    {
+                        var filePath = this.mainViewModel.OutputFile;
+                        var histoWindow = new GistoWindow(filePath, MainViewModel.HistoFileSource.Output)
+                        {
+                            Width = 1200,
+                            Height = 850
+                        };
+                        histoWindow.InitializeComponent();
+                        histoWindow.Show();
+                        histoWindow.MakeScreenshot(histoFileName);
+                        histoWindow.Close();
+
+                        var tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
+                        {
+                            Width = 1200,
+                            Height = 850
+                        };
+                        tableWindow.InitializeComponent();
+                        tableWindow.Show();
+                        tableWindow.MakeScreenshot(tableFileName);
+                        tableWindow.Close();
+
+                        return histoWindow.Histogram.Entropy;
+                    }
+                }
+            }
         }
     }
 }
