@@ -68,6 +68,17 @@ namespace RSB_GUI.Windows
             }
         }
 
+        public void MakeScreenshot(string fileName)
+        {
+            var screenShot = GenerateScreenshot();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(screenShot));
+            using (var stream = File.Create(fileName))
+            {
+                encoder.Save(stream);
+            }
+        }
+        
         private void ClipboardMenuItem_Click(object sender, RoutedEventArgs e)
         {
             try

@@ -39,6 +39,17 @@ namespace RSB_GUI.Windows
             e.Row.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
         }
 
+        public void MakeScreenshot(string fileName)
+        {
+            var screenShot = GenerateScreenshot();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(screenShot));
+            using (var stream = File.Create(fileName))
+            {
+                encoder.Save(stream);
+            }
+        }
+        
         private void FileMenuItem_Click(object sender, RoutedEventArgs e)
         {
             try
