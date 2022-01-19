@@ -106,7 +106,7 @@
                 <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1" MouseDown="Label_MouseDown"/>
             </Grid>
             <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Авто-документація" Click="Button_Click_6"/>
-
+            <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Відкрити результати" Click="Open_Results"></Button>
         </StackPanel>
     </Grid>
 </Window>

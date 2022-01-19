@@ -250,6 +250,22 @@ namespace RSB_GUI
             Clipboard.SetText(this.mainViewModel.ElapsedTime.TotalSeconds.ToString());
         }
 
+        private void Open_Results(object sender, RoutedEventArgs e)
+        {
+            var filePath = Path.Combine("Images", "values.json");
+            List<Testing> testingValues = new List<Testing>();
+            if (File.Exists(filePath))
+            {
+                using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    testingValues = bf.Deserialize(fs) as List<Testing>;
+                }
+            }
+
+            var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(testingValues.ToArray());
+            File.WriteAllText(filePath, serialized);
+        }
         private async void Button_Click_6(object sender, RoutedEventArgs e)
         {
             List<Testing> testingValues = new List<Testing>();
