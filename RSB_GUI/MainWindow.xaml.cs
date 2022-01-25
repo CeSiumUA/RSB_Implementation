@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -19,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CsvHelper;
 using Newtonsoft.Json;
 using RSB_GUI.Utils;
 using Path = System.IO.Path;
@@ -159,6 +161,55 @@ namespace RSB_GUI
             }
         }
 
+        private void ExportCsv(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists("Images/values.json"))
+            {
+                return;
+            }
+
+            var tests = JsonConvert.DeserializeObject<Testing[]>(File.ReadAllText("Images/values.json"));
+            tests = tests.OrderBy(x => x.Rounds).ThenBy(x => x.BlockLength).ToArray();
+            var groupedTests = tests.GroupBy(x => new {x.BlockLength, x.Rounds});
+            using (var writer = new StreamWriter("Images/values.csv"))
+            {
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    foreach (var recgrp in groupedTests)
+                    {
+                        var recEntr = new
+                        {
+                            Round = recgrp.First().Rounds,
+                            BlockLength = recgrp.First().BlockLength,
+                            Indicator = "Н",
+                            Value1 = recgrp.First().Entropy,
+                            Value2 = recgrp.Skip(1).First().Entropy,
+                            Value3 = recgrp.Skip(2).First().Entropy
+                        };
+                        csv.WriteRecord(recEntr);
+                        csv.NextRecord();
+                        var recTime = new
+                        {
+                            Round = recgrp.First().Rounds,
+                            BlockLength = recgrp.First().BlockLength,
+                            Indicator = "Т",
+                            Value1 = recgrp.First().TimeToComplete,
+                            Value2 = recgrp.Skip(1).First().TimeToComplete,
+                            Value3 = recgrp.Skip(2).First().TimeToComplete
+                        };
+                        csv.WriteRecord(recTime);
+                        csv.NextRecord();
+                    }
+                }
+            }
+            
+            
+        }
+        class CsvLine
+        {
+            public int BlockLength { get; set; }
+            public int Round { get; set; }
+        }
         private async void MakeAutoDoc(object sender, RoutedEventArgs e)
         {
             List<Testing> testingValues = new List<Testing>();
@@ -209,7 +260,7 @@ namespace RSB_GUI
                         Rounds = roundsCount,
                         Variant = 2,
                         TimeToComplete = mainViewModel.ElapsedTime.TotalMilliseconds,
-                        Entropy = entropy1
+                        Entropy = entropy2
                     };
                     testingValues.Add(testing2);
 
@@ -229,7 +280,7 @@ namespace RSB_GUI
                         Rounds = roundsCount,
                         Variant = 4,
                         TimeToComplete = mainViewModel.ElapsedTime.TotalMilliseconds,
-                        Entropy = entropy1
+                        Entropy = entropy3
                     };
                     testingValues.Add(testing3);
 

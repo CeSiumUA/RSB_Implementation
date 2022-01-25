@@ -72,7 +72,8 @@
                 <ProgressBar Minimum="0" Grid.Row="0" Grid.Column="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}"/>
                 <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1"/>
                 <Button Content="Comment" Grid.Column="2" Grid.Row="0" Click="Button_Click_2"></Button>
-                <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Авто-документація" Click="MakeAutoDoc"/>
+                <!--<Button Visibility="Visible" VerticalAlignment="Bottom" Content="Авто-документація" Click="MakeAutoDoc"/>-->
+                <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Експорт" Click="ExportCsv"></Button>
             </Grid>
             
         </StackPanel>
