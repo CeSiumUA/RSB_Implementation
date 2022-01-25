@@ -210,7 +210,7 @@ namespace RSB_GUI
             public int BlockLength { get; set; }
             public int Round { get; set; }
         }
-        private async void MakeAutoDoc(object sender, RoutedEventArgs e)
+        private async Task MakeAutoDoc(object sender, RoutedEventArgs e)
         {
             List<Testing> testingValues = new List<Testing>();
             foreach (var roundsCount in mainViewModel.RoundValues)
@@ -233,7 +233,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName1 = $"Блок{blockLength}_Варіант1_Раунди{roundsCount}.png";
-                    var entropy1 = await MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName1)}", $"{Path.Combine(histoDir.FullName, gistoFileName1)}");
+                    var entropy1 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName1, $"{Path.Combine(histoDir.FullName, gistoFileName1)}");
                     var testing1 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -253,7 +253,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName2 = $"Блок{blockLength}_Варіант2_Раунди{roundsCount}.png";
-                    var entropy2 = await MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName2)}", $"{Path.Combine(histoDir.FullName, gistoFileName2)}");
+                    var entropy2 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName2, $"{Path.Combine(histoDir.FullName, gistoFileName2)}");
                     var testing2 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -273,7 +273,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName3 = $"Блок{blockLength}_Варіант4_Раунди{roundsCount}.png";
-                    var entropy3 = await MakeHistoScreenshot($"{Path.Combine(tablesDir.FullName, gistoFileName3)}", $"{Path.Combine(histoDir.FullName, gistoFileName3)}");
+                    var entropy3 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName3, $"{Path.Combine(histoDir.FullName, gistoFileName3)}");
                     var testing3 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -287,7 +287,7 @@ namespace RSB_GUI
                     var json = JsonConvert.SerializeObject(testingValues);
                     File.WriteAllText(Path.Combine(imagesDir.FullName, "values.json"), json);
 
-                    async Task<double> MakeHistoScreenshot(string tableFileName, string histoFileName)
+                    async Task<double> MakeHistoScreenshot(string tableDirName, string tableFileName, string histoFileName)
                     {
                         var filePath = this.mainViewModel.OutputFile;
                         var histoWindow = new GistoWindow(filePath, MainViewModel.HistoFileSource.Output)
@@ -300,6 +300,7 @@ namespace RSB_GUI
                         histoWindow.MakeScreenshot(histoFileName);
                         histoWindow.Close();
 
+                        mainViewModel.TableColumnsCount = 8;
                         var tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
                         {
                             Width = 450,
@@ -308,13 +309,46 @@ namespace RSB_GUI
                         tableWindow.InitializeComponent();
                         tableWindow.Show();
                         await Task.Delay(2000);
-                        tableWindow.MakeScreenshot(tableFileName);
+                        var dir8 = Directory.CreateDirectory(Path.Combine(tableDirName, "Табл-8"));
+                        tableWindow.MakeScreenshot(Path.Combine(dir8.FullName, tableFileName));
                         tableWindow.Close();
 
+                        mainViewModel.TableColumnsCount = 10;
+                        tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
+                        {
+                            Width = 450,
+                            Height = 850
+                        };
+                        tableWindow.InitializeComponent();
+                        tableWindow.Show();
+                        await Task.Delay(2000);
+                        var dir10 = Directory.CreateDirectory(Path.Combine(tableDirName, "Табл-10"));
+                        tableWindow.MakeScreenshot(Path.Combine(dir10.FullName, tableFileName));
+                        tableWindow.Close();
+                        
+                        mainViewModel.TableColumnsCount = 16;
+                        tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
+                        {
+                            Width = 450,
+                            Height = 850
+                        };
+                        tableWindow.InitializeComponent();
+                        tableWindow.Show();
+                        await Task.Delay(2000);
+                        var dir16 = Directory.CreateDirectory(Path.Combine(tableDirName, "Табл-16"));
+                        tableWindow.MakeScreenshot(Path.Combine(dir16.FullName, tableFileName));
+                        tableWindow.Close();
+                        
                         return histoWindow.Histogram.Entropy;
                     }
                 }
             }
+        }
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            await MakeAutoDoc(sender, e);
+            ExportCsv(sender, e);
         }
     }
 }

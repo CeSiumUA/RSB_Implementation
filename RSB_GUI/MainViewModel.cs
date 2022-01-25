@@ -40,7 +40,7 @@ namespace RSB_GUI
         {
             get
             {
-                return new int[] { 4, 8, 16, 32, 64, 128, 256, 512 };
+                return new int[] { 4, 8, 10, 16, 32, 64, 128, 256, 512 };
             }
         }
         public string InputFile

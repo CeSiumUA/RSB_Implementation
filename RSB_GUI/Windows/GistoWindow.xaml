@@ -7,7 +7,15 @@
         mc:Ignorable="d"
         Title="Гістограма" Height="450" Width="800">
     <Grid>
-        <WrapPanel VerticalAlignment="Top" HorizontalAlignment="Center" Height="26">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Height="26">
             <Menu HorizontalContentAlignment="Center" HorizontalAlignment="Center">
                 <MenuItem Header="Зберегти">
                     <MenuItem x:Name="FileMenuItem" Header="Зберегти у файл" Click="FileMenuItem_Click"></MenuItem>
@@ -15,6 +23,7 @@
                 </MenuItem>
             </Menu>
         </WrapPanel>
-        <oxy:PlotView x:Name="Plot" Model="{Binding HistogramPlotModel}" Margin="0,26,0,0"/>
+        <oxy:PlotView Grid.Row="1" x:Name="Plot" Model="{Binding HistogramPlotModel}" Margin="0,26,0,0"/>
+        <Label HorizontalAlignment="Center" Grid.Row="2" Content="Test 1"></Label>
     </Grid>
 </Window>
