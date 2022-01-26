@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RSB_GUI" xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Примітив PrimSquare" Height="340" Width="500" Loaded="Window_Loaded_1">
+        Title="Примітив PrimSquare" Height="360" Width="500" Loaded="Window_Loaded_1">
     <Grid>
         <!--<TabControl x:Name="MainTabControl">
             <TabItem Header="Шифрування">
@@ -59,9 +59,8 @@
                 <RadioButton Content="Дешифратор" IsChecked="{Binding UseDecryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,15"/>
             </WrapPanel>
             <WrapPanel>
-                <!-- <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/> -->
-                <!-- <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/> -->
-                <Button Content="Генерація" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ButtonBase_OnClick"></Button>
+                <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/>
+                <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
             </WrapPanel>
             <Grid Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
@@ -71,10 +70,12 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <ProgressBar Minimum="0" Grid.Row="0" Grid.Column="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}"/>
                 <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1"/>
                 <Button Content="Comment" Grid.Column="2" Grid.Row="0" Click="Button_Click_2"></Button>
+                <Button Content="Генерація" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding AllowEncryption}" Click="ButtonBase_OnClick"></Button>
             </Grid>
             
         </StackPanel>
