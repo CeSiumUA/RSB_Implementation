@@ -38,10 +38,11 @@ namespace RSB_GUI.Windows
                 _histogram = value;
             }
         }
-        public GistoWindow(string filePath, HistoFileSource histoFileSource = HistoFileSource.Input)
+        public GistoWindow(string filePath, HistoFileSource histoFileSource = HistoFileSource.Input, string label = "")
         {
             InitializeComponent();
             this.Plot.Model = CreatePlotModel(filePath, histoFileSource);
+            this.DescriptiveLabel.Content = label;
         }
         private void FileMenuItem_Click(object sender, RoutedEventArgs e)
         {

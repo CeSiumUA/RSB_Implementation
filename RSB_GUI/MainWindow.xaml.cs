@@ -233,7 +233,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName1 = $"Блок{blockLength}_Варіант1_Раунди{roundsCount}.png";
-                    var entropy1 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName1, $"{Path.Combine(histoDir.FullName, gistoFileName1)}");
+                    var entropy1 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName1, $"{Path.Combine(histoDir.FullName, gistoFileName1)}", $"R={roundsCount}; L={blockLength}; V=1");
                     var testing1 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -253,7 +253,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName2 = $"Блок{blockLength}_Варіант2_Раунди{roundsCount}.png";
-                    var entropy2 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName2, $"{Path.Combine(histoDir.FullName, gistoFileName2)}");
+                    var entropy2 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName2, $"{Path.Combine(histoDir.FullName, gistoFileName2)}", $"R={roundsCount}; L={blockLength}; V=2");
                     var testing2 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -273,7 +273,7 @@ namespace RSB_GUI
 
                     }
                     string gistoFileName3 = $"Блок{blockLength}_Варіант4_Раунди{roundsCount}.png";
-                    var entropy3 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName3, $"{Path.Combine(histoDir.FullName, gistoFileName3)}");
+                    var entropy3 = await MakeHistoScreenshot(tablesDir.FullName, gistoFileName3, $"{Path.Combine(histoDir.FullName, gistoFileName3)}", $"R={roundsCount}; L={blockLength}; V=2");
                     var testing3 = new Testing()
                     {
                         BlockLength = blockLength,
@@ -287,10 +287,10 @@ namespace RSB_GUI
                     var json = JsonConvert.SerializeObject(testingValues);
                     File.WriteAllText(Path.Combine(imagesDir.FullName, "values.json"), json);
 
-                    async Task<double> MakeHistoScreenshot(string tableDirName, string tableFileName, string histoFileName)
+                    async Task<double> MakeHistoScreenshot(string tableDirName, string tableFileName, string histoFileName, string label)
                     {
                         var filePath = this.mainViewModel.OutputFile;
-                        var histoWindow = new GistoWindow(filePath, MainViewModel.HistoFileSource.Output)
+                        var histoWindow = new GistoWindow(filePath, MainViewModel.HistoFileSource.Output, label)
                         {
                             Width = 1200,
                             Height = 850
@@ -301,7 +301,7 @@ namespace RSB_GUI
                         histoWindow.Close();
 
                         mainViewModel.TableColumnsCount = 8;
-                        var tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
+                        var tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output, label))
                         {
                             Width = 450,
                             Height = 850
@@ -314,10 +314,10 @@ namespace RSB_GUI
                         tableWindow.Close();
 
                         mainViewModel.TableColumnsCount = 10;
-                        tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
+                        tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output, label))
                         {
-                            Width = 450,
-                            Height = 850
+                            Width = 566,
+                            Height = 700
                         };
                         tableWindow.InitializeComponent();
                         tableWindow.Show();
@@ -327,10 +327,10 @@ namespace RSB_GUI
                         tableWindow.Close();
                         
                         mainViewModel.TableColumnsCount = 16;
-                        tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output))
+                        tableWindow = new TableWindow(new TableViewModel(filePath, settings, MainViewModel.HistoFileSource.Output, label))
                         {
-                            Width = 450,
-                            Height = 850
+                            Width = 900,
+                            Height = 500
                         };
                         tableWindow.InitializeComponent();
                         tableWindow.Show();
@@ -349,6 +349,7 @@ namespace RSB_GUI
         {
             await MakeAutoDoc(sender, e);
             ExportCsv(sender, e);
+            MessageBox.Show("Завершено!", "Результат", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

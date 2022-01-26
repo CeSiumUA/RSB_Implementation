@@ -58,6 +58,9 @@ namespace RSB_GUI.Windows
                 this.OnPropertyChanged();
             }
         }
+
+        public string InfoLabel { get; }
+
         public LabelValue[] HistogramAsLabeledValues
         {
             get
@@ -70,11 +73,12 @@ namespace RSB_GUI.Windows
                 return labelValues;
             }
         }
-        public TableViewModel(string filePath, Settings settings = null, HistoFileSource histoFileSource = HistoFileSource.Input)
+        public TableViewModel(string filePath, Settings settings = null, HistoFileSource histoFileSource = HistoFileSource.Input, string label = "")
         {
             this.FilePath = filePath;
             this.HistoFileSource = histoFileSource;
             this.Settings = settings ?? new Settings();
+            this.InfoLabel = label;
             Histo();
         }
         public void Histo()

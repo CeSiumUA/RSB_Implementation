@@ -27,5 +27,6 @@
                                           AutoGenerateColumns="True" ItemsSource="{Binding HistogramDatatable}"
                                           ColumnWidth="*" Margin="0,26,0,0" FontSize="12"
                                           RowHeight="20" RowHeaderWidth="50" LoadingRow="HistogramDataGrid_LoadingRow"/>
+        <Label VerticalAlignment="Bottom" Content="{Binding InfoLabel}" HorizontalAlignment="Center"></Label>
     </Grid>
 </Window>
