@@ -86,7 +86,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <Button Content="Генерація" Height="25" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding AllowEncryption}" Click="ButtonBase_OnClick"></Button>
+                <Button Content="Генерація" Visibility="Hidden" Height="25" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding AllowEncryption}" Click="ButtonBase_OnClick"></Button>
             </Grid>
             
         </StackPanel>

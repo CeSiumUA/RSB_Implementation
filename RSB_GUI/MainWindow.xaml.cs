@@ -111,15 +111,18 @@ namespace RSB_GUI
         }
         private void ShowHisto(MainViewModel.HistoFileSource histoFileSource)
         {
+            var variant = this.mainViewModel.UseVariant1 ? "1" : (this.mainViewModel.UseVariant2 ? "2" : "4");
+            var label = $"R={this.mainViewModel.SelectedRoundValues}; L={this.mainViewModel.BlockLength}; V={variant}";
             var filePath = histoFileSource == MainViewModel.HistoFileSource.Input ? this.mainViewModel.InputFile : this.mainViewModel.OutputFile;
-            var histoWindow = new GistoWindow(filePath, histoFileSource)
+            label = histoFileSource == MainViewModel.HistoFileSource.Output ? label : string.Empty;
+            var histoWindow = new GistoWindow(filePath, histoFileSource, label)
             {
                 Width = 1200,
                 Height = 850
             };
             histoWindow.Show();
 
-            var tableWindow = new TableWindow(new TableViewModel(filePath, settings, histoFileSource))
+            var tableWindow = new TableWindow(new TableViewModel(filePath, settings, histoFileSource, label))
             {
                 Width = 1200,
                 Height = 850
