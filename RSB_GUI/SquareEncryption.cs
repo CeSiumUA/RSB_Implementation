@@ -79,17 +79,8 @@ namespace RSB_GUI
                 Array.Copy(data, r, linedSquare, 0, _blockSizeBytes);
                 if (_blockSizeVariant == BlockSizeVariant.Variant1)
                 {
-                    var edgeLengthDouble = Math.Sqrt(linedSquare.Length);
-                    int edgeLength = 0;
-                    if (edgeLengthDouble % 1 == 0)
-                    {
-                        edgeLength = (int)edgeLengthDouble;
-                    }
-                    else
-                    {
-                        edgeLength = 4;
-                    }
-                    int encryptionSteps = edgeLengthDouble % 1 == 0 ? 1 : linedSquare.Length / 16;
+                    int edgeLength = 4;
+                    int encryptionSteps = linedSquare.Length / 16;
                     for (int cnt = 0; cnt < encryptionSteps; cnt++)
                     {
                         byte[,] square = new byte[edgeLength, edgeLength];
@@ -220,17 +211,8 @@ namespace RSB_GUI
                 Array.Copy(data, r, linedSquare, 0, _blockSizeBytes);
                 if (_blockSizeVariant == BlockSizeVariant.Variant1)
                 {
-                    var edgeLengthDouble = Math.Sqrt(linedSquare.Length);
-                    int edgeLength = 0;
-                    if (edgeLengthDouble % 1 == 0)
-                    {
-                        edgeLength = (int)edgeLengthDouble;
-                    }
-                    else
-                    {
-                        edgeLength = 4;
-                    }
-                    int encryptionSteps = edgeLengthDouble % 1 == 0 ? 1 : linedSquare.Length / 16;
+                    int edgeLength = 4;
+                    int encryptionSteps = linedSquare.Length / 16;
                     for (int cnt = 0; cnt < encryptionSteps; cnt++)
                     {
                         byte[,] square = new byte[edgeLength, edgeLength];
