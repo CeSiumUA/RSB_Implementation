@@ -34,7 +34,7 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Label Content="Число раундів:" Grid.Column="0" Grid.Row="0"></Label>
+                <Label Content="Кратність перетворення:" Grid.Column="0" Grid.Row="0"></Label>
                 <ComboBox Grid.Row="1" IsEditable="True" Grid.Column="0" ItemsSource="{Binding RoundValues}" SelectedValue="{Binding SelectedRoundValues}" Margin="0,0,20,0" />
                 <Label Content="Розмір блоку:" Grid.Column="1" Grid.Row="0" />
                 <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" ItemsSource="{Binding BlockLengthValues}" SelectedValue="{Binding LogorithmicalBlockLength}" Margin="0,0,20,0" />
@@ -50,8 +50,8 @@
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0" Content="1" IsChecked="{Binding UseVariant1}"></RadioButton>
-                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Content="2" IsChecked="{Binding UseVariant2}"></RadioButton>
-                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2" Content="4" IsChecked="{Binding UseVariant3}"></RadioButton>
+                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Content="2" IsEnabled="{Binding AllowVariant2}" IsChecked="{Binding UseVariant2}"></RadioButton>
+                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2" Content="4" IsEnabled="{Binding AllowVariant3}" IsChecked="{Binding UseVariant3}"></RadioButton>
                     </Grid>
                 </Border>
             </Grid>
@@ -61,7 +61,7 @@
             </WrapPanel>
             <WrapPanel>
                 <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/>
-                <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
+                <Button Content="Сброс" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
             </WrapPanel>
             <Grid Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
@@ -86,7 +86,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <Button Content="Генерація" Visibility="Hidden" Height="25" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding AllowEncryption}" Click="ButtonBase_OnClick"></Button>
+                <!--<Button Content="Генерація" Visibility="Hidden" Height="25" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding AllowEncryption}" Click="ButtonBase_OnClick"></Button>-->
             </Grid>
             
         </StackPanel>

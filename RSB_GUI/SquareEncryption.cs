@@ -72,128 +72,154 @@ namespace RSB_GUI
                 data = FillRemnantBytes(data);
             }
             int blocksSplittingProgress = 0;
-            for (int r = 0; r < data.Length; r += _blockSizeBytes)
+            var blocks = squareSplittingDictionary[_blockSizeVariant];
+            for (int blck = 0; blck < blocks.Count; blck++)
             {
-                if (cancellationToken.IsCancellationRequested) return data;
-                var linedSquare = new byte[_blockSizeBytes];
-                Array.Copy(data, r, linedSquare, 0, _blockSizeBytes);
-                if (_blockSizeVariant == BlockSizeVariant.Variant1)
+                for (int r = 0; r < data.Length; r += _blockSizeBytes)
                 {
-                    int edgeLength = 4;
-                    int encryptionSteps = linedSquare.Length / 16;
-                    for (int cnt = 0; cnt < encryptionSteps; cnt++)
-                    {
-                        byte[,] square = new byte[edgeLength, edgeLength];
-                        #region fillSquare
-                        for (int a = 0; a < edgeLength; a++)
-                        {
-                            for (int b = 0; b < edgeLength; b++)
-                            {
-                                square[a, b] = linedSquare[16 * cnt + (a * edgeLength + b)];
-                            }
-                        }
-                        #endregion
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            #region absorption
-                            byte sum = 0;
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                sum += square[i, j];
-                            }
-                            square[i, i] = sum;
-                            #endregion
-                        }
-
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            #region propogation
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                if (j == i) continue;
-                                square[j, i] = (byte)(square[j, i] + square[i, i]);
-                            }
-                            #endregion
-                        }
-
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        for (int a = 0; a < edgeLength; a++)
-                        {
-                            for (int b = 0; b < edgeLength; b++)
-                            {
-                                linedSquare[16 * cnt + (a * edgeLength + b)] = square[a, b];
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var blocks = squareSplittingDictionary[_blockSizeVariant];
-                    var splittedBlocksCount = _blockSizeBytes / 16;
-                    for(int blockNumber = 0; blockNumber < splittedBlocksCount; blockNumber++)
+                    if (cancellationToken.IsCancellationRequested) return data;
+                    var linedSquare = new byte[_blockSizeBytes];
+                    Array.Copy(data, r, linedSquare, 0, _blockSizeBytes);
+                    if (_blockSizeVariant == BlockSizeVariant.Variant1)
                     {
                         int edgeLength = 4;
-                        var bytesCount = edgeLength * edgeLength;
-                        var diagonalBlocks = blocks[blocksSplittingProgress];
-                        var linuedBlockSquare = new byte[bytesCount];
-                        Array.Copy(linedSquare, blockNumber * bytesCount, linuedBlockSquare, 0, bytesCount);
-                        var square = new byte[diagonalBlocks.Count, diagonalBlocks.Count];
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        #region fillSquare
-                        for (int a = 0; a < edgeLength; a++)
+                        int encryptionSteps = linedSquare.Length / 16;
+                        for (int cnt = 0; cnt < encryptionSteps; cnt++)
                         {
-                            for (int b = 0; b < edgeLength; b++)
-                            {
-                                square[a, b] = linuedBlockSquare[a * edgeLength + b];
-                            }
-                        }
-                        #endregion
-                        #region absorption
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            byte sum = 0;
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                sum += square[i, j];
-                            }
-                            var setColumn = diagonalBlocks[i];
-                            square[i, setColumn] = sum;
-                        }
-                        #endregion
+                            byte[,] square = new byte[edgeLength, edgeLength];
 
-                        #region propogation
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                var setColumn = diagonalBlocks[j];
-                                if (i == setColumn) continue;
-                                square[j, i] = (byte)(square[j, i] + square[j, setColumn]);
-                            }
-                        }
-                        #endregion
+                            #region fillSquare
 
-                        #region fromSquare
-                        for (int a = 0; a < edgeLength; a++)
-                        {
-                            for (int b = 0; b < edgeLength; b++)
+                            for (int a = 0; a < edgeLength; a++)
                             {
-                                linuedBlockSquare[a * edgeLength + b] = square[a, b];
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    square[a, b] = linedSquare[16 * cnt + (a * edgeLength + b)];
+                                }
                             }
-                        }
-                        #endregion
-                        Array.Copy(linuedBlockSquare, 0, linedSquare, blockNumber * bytesCount, bytesCount);
-                        blocksSplittingProgress++;
-                        if (blocksSplittingProgress == blocks.Count)
-                        {
-                            blocksSplittingProgress = 0;
+
+                            #endregion
+
+                            if (cancellationToken.IsCancellationRequested) return data;
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                #region absorption
+
+                                byte sum = 0;
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    sum += square[i, j];
+                                }
+
+                                square[i, i] = sum;
+
+                                #endregion
+                            }
+
+                            if (cancellationToken.IsCancellationRequested) return data;
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                #region propogation
+
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    if (j == i) continue;
+                                    square[j, i] = (byte) (square[j, i] + square[i, i]);
+                                }
+
+                                #endregion
+                            }
+
+                            if (cancellationToken.IsCancellationRequested) return data;
+                            for (int a = 0; a < edgeLength; a++)
+                            {
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    linedSquare[16 * cnt + (a * edgeLength + b)] = square[a, b];
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        var splittedBlocksCount = _blockSizeBytes / 16;
+                        for (int blockNumber = 0; blockNumber < splittedBlocksCount; blockNumber++)
+                        {
+                            int edgeLength = 4;
+                            var bytesCount = edgeLength * edgeLength;
+                            var diagonalBlocks = blocks[blck];
+                            var linuedBlockSquare = new byte[bytesCount];
+                            Array.Copy(linedSquare, blockNumber * bytesCount, linuedBlockSquare, 0, bytesCount);
+                            var square = new byte[diagonalBlocks.Count, diagonalBlocks.Count];
+                            if (cancellationToken.IsCancellationRequested) return data;
+
+                            #region fillSquare
+
+                            for (int a = 0; a < edgeLength; a++)
+                            {
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    square[a, b] = linuedBlockSquare[a * edgeLength + b];
+                                }
+                            }
+
+                            #endregion
+
+                            #region absorption
+
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                byte sum = 0;
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    sum += square[i, j];
+                                }
+
+                                var setColumn = diagonalBlocks[i];
+                                square[i, setColumn] = sum;
+                            }
+
+                            #endregion
+
+                            #region propogation
+
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    var setColumn = diagonalBlocks[j];
+                                    if (i == setColumn) continue;
+                                    square[j, i] = (byte) (square[j, i] + square[j, setColumn]);
+                                }
+                            }
+
+                            #endregion
+
+                            #region fromSquare
+
+                            for (int a = 0; a < edgeLength; a++)
+                            {
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    linuedBlockSquare[a * edgeLength + b] = square[a, b];
+                                }
+                            }
+
+                            #endregion
+
+                            Array.Copy(linuedBlockSquare, 0, linedSquare, blockNumber * bytesCount, bytesCount);
+                            blocksSplittingProgress++;
+                            if (blocksSplittingProgress == blocks.Count)
+                            {
+                                blocksSplittingProgress = 0;
+                            }
+                        }
+                    }
+
+                    Array.Copy(linedSquare, 0, data, r, _blockSizeBytes);
                 }
-                Array.Copy(linedSquare, 0, data, r, _blockSizeBytes);
             }
+
             return data;
         }
         public byte[] Decrypt(byte[] data, CancellationToken cancellationToken)
@@ -204,131 +230,156 @@ namespace RSB_GUI
             }
             int blocksSplittingProgress = 0;
             Step = 0;
-            for (int r = 0; r < data.Length; r += _blockSizeBytes)
+            var blocks = squareSplittingDictionary[_blockSizeVariant];
+            for (int blck = 0; blck < blocks.Count; blck++)
             {
-                if (cancellationToken.IsCancellationRequested) return data;
-                var linedSquare = new byte[_blockSizeBytes];
-                Array.Copy(data, r, linedSquare, 0, _blockSizeBytes);
-                if (_blockSizeVariant == BlockSizeVariant.Variant1)
+                for (int r = 0; r < data.Length; r += _blockSizeBytes)
                 {
-                    int edgeLength = 4;
-                    int encryptionSteps = linedSquare.Length / 16;
-                    for (int cnt = 0; cnt < encryptionSteps; cnt++)
-                    {
-                        byte[,] square = new byte[edgeLength, edgeLength];
-                        #region fillSquare
-                        for (int a = 0; a < edgeLength; a++)
-                        {
-                            for (int b = 0; b < edgeLength; b++)
-                            {
-                                square[a, b] = linedSquare[16 * cnt + (a * edgeLength + b)];
-                            }
-                        }
-                        #endregion
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            #region reverse_propogation
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                if (j == i) continue;
-                                square[j, i] = (byte)(square[j, i] - square[i, i]);
-                            }
-                            #endregion
-                        }
-
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            #region reverse_absorption
-                            byte sum = 0;
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                if (j == i) continue;
-                                sum += square[i, j];
-                            }
-                            square[i, i] = (byte)(square[i, i] - sum);
-                            #endregion
-                        }
-
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        for (int a = 0; a < edgeLength; a++)
-                        {
-                            for (int b = 0; b < edgeLength; b++)
-                            {
-                                linedSquare[16 * cnt + (a * edgeLength + b)] = square[a, b];
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var blocks = squareSplittingDictionary[_blockSizeVariant];
-                    var splittedBlocksCount = _blockSizeBytes / 16;
-                    for (int blockNumber = 0; blockNumber < splittedBlocksCount; blockNumber++)
+                    if (cancellationToken.IsCancellationRequested) return data;
+                    var linedSquare = new byte[_blockSizeBytes];
+                    Array.Copy(data, r, linedSquare, 0, _blockSizeBytes);
+                    if (_blockSizeVariant == BlockSizeVariant.Variant1)
                     {
                         int edgeLength = 4;
-                        var bytesCount = (int)Math.Pow(edgeLength, 2);
-                        var diagonalBlocks = blocks[blocksSplittingProgress];
-                        var linuedBlockSquare = new byte[bytesCount];
-                        Array.Copy(linedSquare, blockNumber * bytesCount, linuedBlockSquare, 0, bytesCount);
-                        var square = new byte[diagonalBlocks.Count, diagonalBlocks.Count];
-                        if (cancellationToken.IsCancellationRequested) return data;
-                        #region fillSquare
-                        for (int a = 0; a < edgeLength; a++)
+                        int encryptionSteps = linedSquare.Length / 16;
+                        for (int cnt = 0; cnt < encryptionSteps; cnt++)
                         {
-                            for (int b = 0; b < edgeLength; b++)
-                            {
-                                square[a, b] = linuedBlockSquare[a * edgeLength + b];
-                            }
-                        }
-                        #endregion
+                            byte[,] square = new byte[edgeLength, edgeLength];
 
-                        #region reverse_propogation
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            for (int j = 0; j < edgeLength; j++)
-                            {
-                                var setCell = diagonalBlocks[j];
-                                if (i == setCell) continue;
-                                square[j, i] = (byte)(square[j, i] - square[j, setCell]);
-                            }
-                        }
-                        #endregion
+                            #region fillSquare
 
-                        #region reverse_absorption
-                        for (int i = 0; i < edgeLength; i++)
-                        {
-                            var setColumn = diagonalBlocks[i];
-                            byte sum = 0;
-                            for (int j = 0; j < edgeLength; j++)
+                            for (int a = 0; a < edgeLength; a++)
                             {
-                                if(setColumn == j) continue;
-                                sum += square[i, j];
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    square[a, b] = linedSquare[16 * cnt + (a * edgeLength + b)];
+                                }
                             }
-                            square[i, setColumn] = (byte)(square[i, setColumn] - sum);
-                        }
-                        #endregion
 
-                        #region fromSquare
-                        for (int a = 0; a < edgeLength; a++)
-                        {
-                            for (int b = 0; b < edgeLength; b++)
+                            #endregion
+
+                            if (cancellationToken.IsCancellationRequested) return data;
+                            for (int i = 0; i < edgeLength; i++)
                             {
-                                linuedBlockSquare[a * edgeLength + b] = square[a, b];
+                                #region reverse_propogation
+
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    if (j == i) continue;
+                                    square[j, i] = (byte) (square[j, i] - square[i, i]);
+                                }
+
+                                #endregion
                             }
-                        }
-                        #endregion
-                        Array.Copy(linuedBlockSquare, 0, linedSquare, blockNumber * bytesCount, bytesCount);
-                        blocksSplittingProgress++;
-                        if (blocksSplittingProgress == blocks.Count)
-                        {
-                            blocksSplittingProgress = 0;
+
+                            if (cancellationToken.IsCancellationRequested) return data;
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                #region reverse_absorption
+
+                                byte sum = 0;
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    if (j == i) continue;
+                                    sum += square[i, j];
+                                }
+
+                                square[i, i] = (byte) (square[i, i] - sum);
+
+                                #endregion
+                            }
+
+                            if (cancellationToken.IsCancellationRequested) return data;
+                            for (int a = 0; a < edgeLength; a++)
+                            {
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    linedSquare[16 * cnt + (a * edgeLength + b)] = square[a, b];
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        var splittedBlocksCount = _blockSizeBytes / 16;
+                        for (int blockNumber = 0; blockNumber < splittedBlocksCount; blockNumber++)
+                        {
+                            int edgeLength = 4;
+                            var bytesCount = (int) Math.Pow(edgeLength, 2);
+                            var diagonalBlocks = blocks[blocks.Count - blck - 1];
+                            var linuedBlockSquare = new byte[bytesCount];
+                            Array.Copy(linedSquare, blockNumber * bytesCount, linuedBlockSquare, 0, bytesCount);
+                            var square = new byte[diagonalBlocks.Count, diagonalBlocks.Count];
+                            if (cancellationToken.IsCancellationRequested) return data;
+
+                            #region fillSquare
+
+                            for (int a = 0; a < edgeLength; a++)
+                            {
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    square[a, b] = linuedBlockSquare[a * edgeLength + b];
+                                }
+                            }
+
+                            #endregion
+
+                            #region reverse_propogation
+
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    var setCell = diagonalBlocks[j];
+                                    if (i == setCell) continue;
+                                    square[j, i] = (byte) (square[j, i] - square[j, setCell]);
+                                }
+                            }
+
+                            #endregion
+
+                            #region reverse_absorption
+
+                            for (int i = 0; i < edgeLength; i++)
+                            {
+                                var setColumn = diagonalBlocks[i];
+                                byte sum = 0;
+                                for (int j = 0; j < edgeLength; j++)
+                                {
+                                    if (setColumn == j) continue;
+                                    sum += square[i, j];
+                                }
+
+                                square[i, setColumn] = (byte) (square[i, setColumn] - sum);
+                            }
+
+                            #endregion
+
+                            #region fromSquare
+
+                            for (int a = 0; a < edgeLength; a++)
+                            {
+                                for (int b = 0; b < edgeLength; b++)
+                                {
+                                    linuedBlockSquare[a * edgeLength + b] = square[a, b];
+                                }
+                            }
+
+                            #endregion
+
+                            Array.Copy(linuedBlockSquare, 0, linedSquare, blockNumber * bytesCount, bytesCount);
+                            blocksSplittingProgress++;
+                            if (blocksSplittingProgress == blocks.Count)
+                            {
+                                blocksSplittingProgress = 0;
+                            }
+                        }
+                    }
+
+                    Array.Copy(linedSquare, 0, data, r, _blockSizeBytes);
                 }
-                Array.Copy(linedSquare, 0, data, r, _blockSizeBytes);
             }
+
             return data;
         }
         public byte[] FillRemnantBytes(byte[] data)
@@ -344,6 +395,18 @@ namespace RSB_GUI
         private int step;
         private Dictionary<BlockSizeVariant, Dictionary<int, Dictionary<int, int>>> squareSplittingDictionary = new Dictionary<BlockSizeVariant, Dictionary<int, Dictionary<int, int>>>()
         {
+            {BlockSizeVariant.Variant1, new Dictionary<int, Dictionary<int, int>>()
+                {
+                    {0, new Dictionary<int, int>()
+                        {
+                            {0, 0 },
+                            {1, 1 },
+                            {2, 2 },
+                            {3, 3 },
+                        }
+                    }
+                }
+            },
             {BlockSizeVariant.Variant2, new Dictionary<int, Dictionary<int, int>>()
                 {
                     {0, new Dictionary<int, int>()

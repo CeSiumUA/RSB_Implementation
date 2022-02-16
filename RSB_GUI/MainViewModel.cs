@@ -105,8 +105,24 @@ namespace RSB_GUI
             set
             {
                 Settings.LogBlockLength = value;
+                if (value == 256 && UseVariant3)
+                {
+                    //UseVariant3 = false;
+                    Settings.UseVariant2 = true;
+                }
+                else if (value == 128 && (UseVariant2 || UseVariant3))
+                {
+                    //UseVariant3 = false;
+                    //UseVariant2 = false;
+                    Settings.UseVariant1 = true;
+                }
                 this.OnPropertyChanged("LogorithmicalBlockLength");
                 this.OnPropertyChanged("AllowDiagonalModeSelection");
+                this.OnPropertyChanged("AllowVariant2");
+                this.OnPropertyChanged("AllowVariant3");
+                this.OnPropertyChanged("UseVariant3");
+                this.OnPropertyChanged("UseVariant2");
+                this.OnPropertyChanged("UseVariant1");
             }
         }
         public int[] BlockLengthValues
@@ -183,6 +199,33 @@ namespace RSB_GUI
                 this.OnPropertyChanged();
             }
         }
+
+        public bool AllowVariant2
+        {
+            get
+            {
+                if (LogorithmicalBlockLength == 256 || LogorithmicalBlockLength == 512)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool AllowVariant3
+        {
+            get
+            {
+                if (LogorithmicalBlockLength == 512)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         public int ShiftValue
         {
             get
@@ -388,13 +431,17 @@ namespace RSB_GUI
                     encryptor.TotalSteps = SelectedRoundValues;
                     for (int pb = 0; pb < SelectedRoundValues; pb++)
                     {
+                        var bytesToProcess = new byte[processedBytes.Length];
+                        Array.Copy(processedBytes, bytesToProcess, processedBytes.Length);
                         if (UseEncryption)
                         {
-                            processedBytes = encryptor.Encrypt(processedBytes, _cancellationTokenSource.Token);
+                            var resultBytes = encryptor.Encrypt(bytesToProcess, _cancellationTokenSource.Token);
+                            Array.Copy(resultBytes, 0, processedBytes, 0, processedBytes.Length);
                         }
                         else
                         {
-                            processedBytes = encryptor.Decrypt(processedBytes, _cancellationTokenSource.Token);
+                            var resultBytes = encryptor.Decrypt(bytesToProcess, _cancellationTokenSource.Token);
+                            Array.Copy(resultBytes, 0, processedBytes, 0, processedBytes.Length);
                         }
                         if (_cancellationTokenSource.IsCancellationRequested)
                         {
@@ -438,7 +485,8 @@ namespace RSB_GUI
 
         public void CancelEncryption()
         {
-            this._cancellationTokenSource.Cancel();
+            this.Settings = new Settings();
+            this.OnPropertyChanged();
         }
 
         public void SelectInputFile()
