@@ -165,14 +165,14 @@ namespace RSB_GUI
             var key = mainViewModel.Key;
             if (key != null)
             {
-                var textBoxes = key.Length / 8;
+                var textBoxes = key.Length / 16;
                 for (int x = 0; x < textBoxes; x++)
                 {
                     var textBox = new TextBox();
                     textBox.SetValue(Grid.RowProperty, x);
                     textBox.SetValue(Grid.ColumnProperty, 0);
-                    var bytesToShow = new byte[8];
-                    Array.Copy(key, x * 8, bytesToShow, 0, 8);
+                    var bytesToShow = new byte[16];
+                    Array.Copy(key, x * 16, bytesToShow, 0, 16);
                     textBox.Text = BitConverter.ToString(bytesToShow);
                     textBox.TextChanged += UpdateHexKey;
                     KeyGrid.Children.Add(textBox);
