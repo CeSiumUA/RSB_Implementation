@@ -92,7 +92,7 @@
             </WrapPanel>
             <WrapPanel>
                 <Button Content="Пуск" IsEnabled="{Binding AllowEncryption}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click" Margin="0,15,15,15"/>
-                <Button Content="Сброс" IsEnabled="{Binding IsEncryptionRunning}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
+                <Button Content="Сброс" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Click="Button_Click_1" Margin="0,15,0,15"/>
             </WrapPanel>
             <Grid Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
@@ -105,8 +105,8 @@
                 <ProgressBar Minimum="0" Grid.Row="0" Grid.Column="0" Maximum="{Binding TotalEncryptionSteps, Mode=OneWay}" Value="{Binding CurrentStep, Mode=OneWay}"/>
                 <Label Content="{Binding ElapsedTime}" Grid.Row="0" Grid.Column="1" MouseDown="Label_MouseDown"/>
             </Grid>
-            <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Авто-документація" Click="Button_Click_6"/>
-            <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Відкрити результати" Click="Open_Results"></Button>
+            <!--<Button Visibility="Visible" VerticalAlignment="Bottom" Content="Авто-документація" Click="Button_Click_6"/>
+            <Button Visibility="Visible" VerticalAlignment="Bottom" Content="Відкрити результати" Click="Open_Results"></Button>-->
         </StackPanel>
     </Grid>
 </Window>

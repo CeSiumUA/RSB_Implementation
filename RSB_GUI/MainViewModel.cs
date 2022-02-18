@@ -1,21 +1,19 @@
-﻿using System;
+﻿using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using RSB_GUI.Encryptors;
+using RSB_GUI.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
-using RSB_GUI.Encryptors;
-using RSB_GUI.Utils;
 using MessageBox = System.Windows.MessageBox;
 using TickStyle = OxyPlot.Axes.TickStyle;
 
@@ -32,7 +30,7 @@ namespace RSB_GUI
             }
             set
             {
-                if(Settings.TableColumnsCount != value)
+                if (Settings.TableColumnsCount != value)
                 {
                     Settings.TableColumnsCount = value;
                     this.OnPropertyChanged();
@@ -117,7 +115,7 @@ namespace RSB_GUI
         {
             get
             {
-                return new int[] { 128, 192, 256, 512 };
+                return new int[] { 128, 256, 512 };
             }
         }
         public int[] RoundValues
@@ -125,7 +123,7 @@ namespace RSB_GUI
             get
             {
                 int[] values = new int[16];
-                for(int i = 1; i <= 16; i++)
+                for (int i = 1; i <= 16; i++)
                 {
                     values[i - 1] = i;
                 }
@@ -157,8 +155,8 @@ namespace RSB_GUI
             {
                 return Settings.UseVariant1;
             }
-            set 
-            { 
+            set
+            {
                 Settings.UseVariant1 = value;
                 this.OnPropertyChanged();
             }
@@ -300,7 +298,7 @@ namespace RSB_GUI
         {
             get
             {
-                return new int[] {128, 192, 256, 512};
+                return new int[] { 128, 256, 512 };
             }
         }
 
@@ -344,7 +342,7 @@ namespace RSB_GUI
         {
             get
             {
-                
+
                 if (key == null)
                 {
                     if (File.Exists(CommonKeyPath))
@@ -433,7 +431,7 @@ namespace RSB_GUI
             get
             {
                 LabelValue[] labelValues = new LabelValue[Histogram.HistogramValues.Length];
-                for( int x = 0; x < labelValues.Length; x++)
+                for (int x = 0; x < labelValues.Length; x++)
                 {
                     labelValues[x] = new LabelValue(x, Histogram.HistogramValues[x]);
                 }
@@ -476,7 +474,7 @@ namespace RSB_GUI
             new Task(async () =>
             {
                 var fileBytes = ReadFileBytes(this.InputFile);
-                
+
                 if (fileBytes is SmallFileBytes)
                 {
                     byte[] processedBytes = (fileBytes as SmallFileBytes).Bytes;
@@ -498,7 +496,7 @@ namespace RSB_GUI
                     }
                     File.WriteAllBytes(this.OutputFile, processedBytes);
                 }
-                if(fileBytes is LargeFileBytes)
+                if (fileBytes is LargeFileBytes)
                 {
                     var largeFileBytes = fileBytes as LargeFileBytes;
                     using (FileStream fs = new FileStream(this.OutputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
@@ -525,7 +523,7 @@ namespace RSB_GUI
                         }
                     }
                 }
-                
+
                 this.IsEncryptionRunning = false;
                 this.ElapsedTime = stopWatch.Elapsed;
                 encryptor.Step = 0;
@@ -535,12 +533,13 @@ namespace RSB_GUI
 
         public void CancelEncryption()
         {
-            this._cancellationTokenSource.Cancel();
+            this.Settings = new Settings();
+            this.OnPropertyChanged();
         }
 
         public void SelectInputFile()
         {
-            using(var fileDialog =  new OpenFileDialog())
+            using (var fileDialog = new OpenFileDialog())
             {
                 if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -553,7 +552,7 @@ namespace RSB_GUI
         {
             using (var saveFileDialog = new SaveFileDialog())
             {
-                if(saveFileDialog.ShowDialog() == DialogResult.OK)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     this.OutputFile = saveFileDialog.FileName;
                 }
@@ -602,7 +601,7 @@ namespace RSB_GUI
                 string fileType = histoFileSource == HistoFileSource.Input ? "вхідного" : "вихідного";
                 var pointsList = new LabelValue[this.Histogram.HistogramValues.Length];
                 for (int x = 0; x < pointsList.Length; x++)
-                {  
+                {
                     pointsList[x] = new LabelValue(x, this.Histogram.HistogramValues[x]);
                 }
                 //FIXME Add option to choose or unchoose 0s
@@ -642,7 +641,7 @@ namespace RSB_GUI
                     ValueField = "Value",
                     StrokeThickness = 0.1,
                     FillColor = OxyColor.FromArgb(255, 255, 0, 0),
-                    StrokeColor = OxyColor.FromArgb(255,255, 0, 0)
+                    StrokeColor = OxyColor.FromArgb(255, 255, 0, 0)
                 });
             }
         }
@@ -678,7 +677,7 @@ namespace RSB_GUI
                 List<byte[]> fileChunks = new List<byte[]>();
                 using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    for(int x = 0; x <  chunks; x++)
+                    for (int x = 0; x < chunks; x++)
                     {
                         byte[] chunkBytes = new byte[Int32.MaxValue - 100];
                         fs.Read(chunkBytes, 0, Int32.MaxValue - 100);
@@ -697,9 +696,9 @@ namespace RSB_GUI
         }
         private int GetCurrentScIntervalVariant()
         {
-            if(UseVariant1) return 8;
-            if(UseVariant2) return 16;
-            if(UseVariant3) return 32;
+            if (UseVariant1) return 8;
+            if (UseVariant2) return 16;
+            if (UseVariant3) return 32;
             return 32;
         }
     }

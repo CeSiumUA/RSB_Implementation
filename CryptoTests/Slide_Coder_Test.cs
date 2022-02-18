@@ -1,7 +1,7 @@
-using System;
-using System.Security.Cryptography;
 using RSB.Core;
 using RSB_GUI.Encryptors;
+using System;
+using System.Security.Cryptography;
 using Xunit;
 
 namespace CryptoTests;
@@ -31,7 +31,7 @@ public class Slide_Coder_Test
     private EncryptorWithData CreateEncryptor()
     {
         Random random = new Random();
-        int[] bitSizes = new int[] { 128, 192, 256, 512 };
+        int[] bitSizes = new int[] { 128, 256, 512 };
         int[] scIntervals = new int[] { 8, 16, 32 };
         var keySize = bitSizes[random.Next(0, bitSizes.Length)];
         var blockSize = bitSizes[random.Next(0, bitSizes.Length)];
