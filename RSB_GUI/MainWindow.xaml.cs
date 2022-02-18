@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -243,6 +244,29 @@ namespace RSB_GUI
         private void Label_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Clipboard.SetText(this.mainViewModel.ElapsedTime.TotalSeconds.ToString());
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            var xpsTempFilePath = System.IO.Path.GetTempFileName();
+            _removeableFiles.Add(xpsTempFilePath);
+            try
+            {
+                var documentWindow = new CommentDocument(xpsTempFilePath);
+                documentWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                var docxName = "Comment.docx";
+                _removeableFiles.Add(docxName);
+                var docxBytes = RSB_GUI.Properties.Resources.Comment1;
+                File.WriteAllBytes(docxName, docxBytes);
+                using (Process process = new Process())
+                {
+                    process.StartInfo.FileName = docxName;
+                    process.Start();
+                }
+            }
         }
 
         //private void Open_Results(object sender, RoutedEventArgs e)

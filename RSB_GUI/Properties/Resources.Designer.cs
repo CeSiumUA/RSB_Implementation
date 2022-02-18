@@ -59,5 +59,25 @@ namespace RSB_GUI.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Comment {
+            get {
+                object obj = ResourceManager.GetObject("Comment", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Comment1 {
+            get {
+                object obj = ResourceManager.GetObject("Comment1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
