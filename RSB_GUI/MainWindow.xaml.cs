@@ -172,6 +172,7 @@ namespace RSB_GUI
                     var textBox = new TextBox();
                     textBox.SetValue(Grid.RowProperty, x);
                     textBox.SetValue(Grid.ColumnProperty, 0);
+                    textBox.Margin = new Thickness(0, 0, 7, 0);
                     var bytesToShow = new byte[16];
                     Array.Copy(key, x * 16, bytesToShow, 0, 16);
                     textBox.Text = BitConverter.ToString(bytesToShow);
